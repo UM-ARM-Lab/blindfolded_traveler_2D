@@ -9,15 +9,29 @@ namespace BTP
     class IndependentBlockageScenario : public Scenario
     {
     public:
-        IndependentBlockageScenario(IndependentBlockageState s):
+        IndependentBlockageScenario(IndependentBlockageState s, Location goal):
+            Scenario(goal),
             true_state(s)
         {
         }
         
-        virtual void Transition(Action a) override
+        virtual void transition(Action a) override
         {
-            double b = true_state.getBlockage(getLocation(), a);
-            double weight = getGraph().getEdge(getLocation(), a).getWeight();
+            Location cur = getLocation();
+            double b = true_state.getBlockage(cur, a);
+            double weight = getGraph().getEdge(cur, a).getWeight();
+            Observation ob(cur, a, b);
+            obs.push_back(ob);
+
+            if(ob.succeeded())
+            {
+                true_state.current_location = a;
+                accumulated_cost += weight;
+            }
+            else
+            {
+                accumulated_cost += 2 * b * weight;
+            }
         }
 
         virtual const GraphD& getGraph() const override
@@ -25,12 +39,18 @@ namespace BTP
             return true_state.graph;
         }
 
-        virtual const Location getLocation() const override
+        virtual const Location& getLocation() const override
         {
             return true_state.current_location;
         }
 
-    private:
+        virtual const Observations& getObservations() const override
+        {
+            return obs;
+        }
+
+
+    protected:
         IndependentBlockageState true_state;
     };
 
@@ -60,7 +80,7 @@ namespace BTP
     {
     public:
         IndependentBlockageGridScenario(int num_rows):
-            IndependentBlockageScenario(IndependentBlockageState(Grid(num_rows), 0))
+            IndependentBlockageScenario(IndependentBlockageState(Grid(num_rows), 0), num_rows * num_rows - 1)
         {
         }
     };
