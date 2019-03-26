@@ -15,6 +15,12 @@ As an overview, this depends on:
 2. https://github.com/UM-ARM-Lab/unknown_graph_planner/tree/BlindfoldedTraveler (be sure to get the correct branch)
 3. flann: `sudo apt install libpcl-dev`
 
+## Usage
+1. `roscore`
+2. In a new terminal run `rviz` and open the `graph.rviz` configuration
+2. In a new terminal run `rosrun blind_traveler_2D wip`
+4. Watch the rviz graph and agent update
+
 ## Overview
 
 The Blindfolded Traveler's Problem is where traveler on a graph is attempting to reach a goal node, however the traveler does not learn the validity of an edge until attempted. 
