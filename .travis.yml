@@ -1,0 +1,17 @@
+sudo: required
+
+services:
+  - docker
+
+env: SH="docker exec -t ubuntu-test bash -c"
+    
+before_install:
+  - docker build -t blindfolded ./docker
+  - docker run --name "ubuntu-test" -d -v $(pwd):/root/catkin_ws/src/blindfolded_traveler_2D -w /root/catkin_ws blindfolded tail -f /dev/null
+  - docker ps
+
+install:
+  - $SH "./src/blindfolded_traveler_2D/docker/setup.sh"
+
+after_script:
+  - docker images

@@ -13,4 +13,4 @@ cd ~/catkin_ws/src/unknown_graph_planner
 git checkout BlindfoldedTraveler
 
 cd ~/catkin_ws
-catkin_make
+catkin_make_isolated

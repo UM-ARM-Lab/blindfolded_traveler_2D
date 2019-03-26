@@ -2,6 +2,11 @@ FROM ros:kinetic-ros-base
 
 RUN mkdir -p ~/catkin_ws/src
 
-RUN cd ~/catkin_ws/src && git clone https://github.com/UM-ARM-Lab/blindfolded_traveler_2D.git
 
-RUN ~/catkin_ws/src/blindfolded_traveler_2D/docker/setup.sh
+RUN apt update -yq\
+    && apt -yqq install \
+    libeigen3-dev \
+    libz-dev \
+    libpcl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
