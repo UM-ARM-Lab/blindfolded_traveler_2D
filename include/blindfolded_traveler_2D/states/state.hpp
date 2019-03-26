@@ -1,6 +1,7 @@
 #ifndef BTP_STATE_HPP
 #define BTP_STATE_HPP
 #include "graph_planner/halton_graph.hpp"
+#include "graph_planner/2d_obstacles.hpp"
 
 namespace BTP
 {
@@ -19,6 +20,9 @@ namespace BTP
     public:
         State(GraphD graph, Location cur) :
             graph(graph), current_location(cur)
+        {}
+
+        State()
         {}
 
         virtual double getBlockage(Location l, Action a) = 0;
@@ -45,8 +49,31 @@ namespace BTP
         
         double getBlockage(Location l, Action a) override
         {
-            return 1;
+            return 1; //TODO define a blockage variable and return based on it
         }
+    };
+
+
+    class ObstacleState : public State
+    {
+    public:
+        ObstacleState()
+        {
+        }
+        
+        ObstacleState(GraphD graph, Location cur, Obstacles2D::Obstacles obstacles):
+            State(graph, cur), obstacles(obstacles)
+        {
+        }
+
+        virtual double getBlockage(Location l, Action a) override
+        {
+            std::vector<double> q1 = graph.getNode(l).getValue();
+            std::vector<double> q2 = graph.getNode(a).getValue();
+            return obstacles.fractionUntilCollision(q1, q2);
+        }
+        
+        Obstacles2D::Obstacles obstacles;
     };
 }
 

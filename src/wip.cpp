@@ -1,6 +1,7 @@
 #include "states/state.hpp"
 #include "scenarios/scenario.hpp"
 #include "scenarios/independent_scenario.hpp"
+#include "scenarios/obstacle_scenario.hpp"
 #include "strategies/myopic_strategies.hpp"
 #include "player.hpp"
 #include "ros/ros.h"
@@ -17,15 +18,17 @@ int main(int argc, char **argv)
 
 
 
-    IndependentBlockageGridScenario scenario(5);
+    // IndependentBlockageGridScenario scenario(5);
+    WallObstacleScenario scenario;
     OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
 
     Player player(n);
 
-    ros::Duration(1).sleep();
+    ros::Duration(1).sleep(); //Sleep to allow publishers to connect
 
-    player.run(scenario, strat, 1.0);
+    player.run(scenario, strat, 0.2);
 
 
     // viz.vizGraph(scenario.getGraph(), "Grid Graph with Independent Blockage");
+    ros::Duration(1).sleep(); //sleep to allow final messages to reach RViz
 }

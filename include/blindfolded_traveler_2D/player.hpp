@@ -19,12 +19,15 @@ namespace BTP
         
         void run(Scenario &scenario, Strategy &strat, double sleep_time_s = 0)
         {
+            scenario.viz(viz);
+            
             while(!scenario.completed())
             {
                 Action a = strat.getNextAction(scenario.getLocation(), scenario.getObservations(), viz);
                 std::cout << "Agent at " << scenario.getLocation() << " taking action " << a << "\n";
                 
                 scenario.transition(a);
+                
                 
                 ros::Duration(sleep_time_s).sleep();
             }

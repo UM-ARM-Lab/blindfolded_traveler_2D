@@ -2,6 +2,7 @@
 #define BTP_SCENARIO_HPP
 #include "states/state.hpp"
 #include "observations.hpp"
+#include "graph_planner/graph_visualization.hpp"
 
 namespace BTP
 {
@@ -14,6 +15,9 @@ namespace BTP
         Observations obs;
 
     public:
+        Scenario() : goal()
+        {}
+        
         Scenario(Location goal) :
             accumulated_cost(0), goal(goal)
         {}
@@ -46,6 +50,10 @@ namespace BTP
             {
                 accumulated_cost += 2 * b * weight;
             }
+        }
+
+        virtual void viz(GraphVisualizer &viz) const 
+        {
         }
 
     protected:
