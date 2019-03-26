@@ -3,7 +3,7 @@
 
 #include "scenarios/scenario.hpp"
 #include "strategies/strategy.hpp"
-
+#include "graph_planner/graph_visualization.hpp"
 
 
 namespace BTP
@@ -11,16 +11,26 @@ namespace BTP
     class Player
     {
     public:
-        void run(Scenario &scenario, Strategy &strat)
+        ros::NodeHandle& n;
+        GraphVisualizer viz;
+
+        Player(ros::NodeHandle &n) : n(n), viz(n)
+        {}
+        
+        void run(Scenario &scenario, Strategy &strat, double sleep_time_s = 0)
         {
             while(!scenario.completed())
             {
-                Action a = strat.getNextAction(scenario.getLocation(), scenario.getObservations());
+                Action a = strat.getNextAction(scenario.getLocation(), scenario.getObservations(), viz);
                 std::cout << "Agent at " << scenario.getLocation() << " taking action " << a << "\n";
+                
                 scenario.transition(a);
-                std::cout << "Completed? " << scenario.completed() << "\n";
-                std::cout << "Agent at " << scenario.getLocation() << " with goal " << scenario.goal << "\n";
+                
+                ros::Duration(sleep_time_s).sleep();
             }
+
+            //run one final time to update belief for visualization
+            strat.getNextAction(scenario.getLocation(), scenario.getObservations(), viz);
         }
     };
 }

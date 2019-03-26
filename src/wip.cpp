@@ -15,17 +15,17 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "wip_BTP");
     ros::NodeHandle n;
 
-    GraphVisualizer viz(n);
 
-    ros::Duration(1).sleep();
 
     IndependentBlockageGridScenario scenario(5);
     OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
 
-    Player player;
+    Player player(n);
 
-    player.run(scenario, strat);
+    ros::Duration(1).sleep();
+
+    player.run(scenario, strat, 1.0);
 
 
-    viz.vizGraph(scenario.getGraph(), "Grid Graph with Independent Blockage");
+    // viz.vizGraph(scenario.getGraph(), "Grid Graph with Independent Blockage");
 }

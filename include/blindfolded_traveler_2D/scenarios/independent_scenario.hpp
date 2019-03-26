@@ -15,24 +15,6 @@ namespace BTP
         {
         }
         
-        virtual void transition(Action a) override
-        {
-            Location cur = getLocation();
-            double b = true_state.getBlockage(cur, a);
-            double weight = getGraph().getEdge(cur, a).getWeight();
-            Observation ob(cur, a, b);
-            obs.push_back(ob);
-
-            if(ob.succeeded())
-            {
-                true_state.current_location = a;
-                accumulated_cost += weight;
-            }
-            else
-            {
-                accumulated_cost += 2 * b * weight;
-            }
-        }
 
         virtual const GraphD& getGraph() const override
         {
@@ -52,27 +34,14 @@ namespace BTP
 
     protected:
         IndependentBlockageState true_state;
-    };
 
-
-    
-    class Grid : public RDiscGraph
-    {
-    public:
-        Grid(int rows):
-            RDiscGraph(1.0/((double)rows - 1.0000001) * 1.4143)
+        virtual State& getState()
         {
-            for(int i=0; i<rows; i++)
-            {
-                for(int j=0; j<rows; j++)
-                {
-                    std::vector<double> q{(double)i / ((double)rows - 1.0),
-                            (double)j / ((double)rows - 1.0)};
-                    addVertexAndEdges(q);
-                }
-            }
+            return true_state;
         }
     };
+
+
 
 
 

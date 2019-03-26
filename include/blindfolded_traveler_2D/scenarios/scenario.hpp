@@ -29,7 +29,27 @@ namespace BTP
 
         virtual const Observations& getObservations() const = 0;
 
-        virtual void transition(Action a) = 0;
+        virtual void transition(Action a)
+        {
+            Location cur = getLocation();
+            double b = getState().getBlockage(cur, a);
+            double weight = getGraph().getEdge(cur, a).getWeight();
+            Observation ob(cur, a, b);
+            obs.push_back(ob);
+
+            if(ob.succeeded())
+            {
+                getState().current_location = a;
+                accumulated_cost += weight;
+            }
+            else
+            {
+                accumulated_cost += 2 * b * weight;
+            }
+        }
+
+    protected:
+        virtual State& getState() = 0;
 
     };
 

@@ -19,9 +19,8 @@ namespace BTP
     public:
         State(GraphD graph, Location cur) :
             graph(graph), current_location(cur)
-        {};
+        {}
 
-        
         virtual double getBlockage(Location l, Action a) = 0;
 
         std::vector<Action> getActions(Location l)

@@ -28,6 +28,11 @@ namespace BTP
                 updateBelief(obs.back());
             }
 
+            if(current == goal)
+            {
+                return goal;
+            }
+
             auto result = arc_dijkstras::AstarLogging<std::vector<double>>::PerformAstar(
                 graph, current, goal, &distanceHeuristic, true);
 
