@@ -17,6 +17,7 @@ set(CATKIN_PACKAGES
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   ${CATKIN_PACKAGES})
+find_package(GTest)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -204,3 +205,9 @@ target_link_libraries(wip
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+catkin_add_gtest(test_basic_behavior
+  tests/test_basic_behavior.cpp)
+target_link_libraries(test_basic_behavior
+  ${catkin_LIBRARIES}
+)
+

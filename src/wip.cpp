@@ -5,7 +5,6 @@
 #include "strategies/myopic_strategies.hpp"
 #include "player.hpp"
 #include "ros/ros.h"
-#include "graph_planner/graph_visualization.hpp"
 
 
 using namespace BTP;
