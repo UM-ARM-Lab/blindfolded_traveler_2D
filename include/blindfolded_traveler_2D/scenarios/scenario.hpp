@@ -12,14 +12,23 @@ namespace BTP
     public:
         Location goal;
         double accumulated_cost;
+        int edges_attempted;
+        int invalid_edges_attempted;
         Observations obs;
 
     public:
-        Scenario() : goal()
+        Scenario() :
+            goal(),
+            accumulated_cost(0.0),
+            edges_attempted(0),
+            invalid_edges_attempted(0)
         {}
         
         Scenario(Location goal) :
-            accumulated_cost(0), goal(goal)
+            goal(goal),
+            accumulated_cost(0.0),
+            edges_attempted(0),
+            invalid_edges_attempted(0)
         {}
         
         virtual bool completed() const
@@ -35,6 +44,8 @@ namespace BTP
 
         virtual void transition(Action a)
         {
+            edges_attempted++;
+            
             Location cur = getLocation();
             double b = getState().getBlockage(cur, a);
             double weight = getGraph().getEdge(cur, a).getWeight();
@@ -48,6 +59,7 @@ namespace BTP
             }
             else
             {
+                invalid_edges_attempted++;
                 accumulated_cost += 2 * b * weight;
             }
         }

@@ -4,9 +4,10 @@
 #include "scenarios/obstacle_scenario.hpp"
 #include "strategies/myopic_strategies.hpp"
 #include "player.hpp"
-#include "ros/ros.h"
 #include "graph_planner/graph_visualization.hpp"
+#include "scenarios/predefined.hpp"
 
+#include "ros/ros.h"
 #include <gtest/gtest.h>
 
 
@@ -22,6 +23,22 @@ TEST(basic_behavior, optimistic_wall)
 
     EXPECT_GT(scenario.accumulated_cost, 0) << "Reached goal with zero cost";
     EXPECT_LT(scenario.accumulated_cost, 10000) << "Reached goal with way too much cost";
+
+    EXPECT_GT(scenario.edges_attempted, 0) << "Reached goal with not enough edges attempted";
+}
+
+TEST(basic_behavior, optimistic_random_wall)
+{
+    ros::NodeHandle n;
+    ManyPossibleWallsScenario scenario;
+    OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
+    Player player(n);
+    player.run(scenario, strat);
+
+    EXPECT_GT(scenario.accumulated_cost, 0) << "Reached goal with zero cost";
+    EXPECT_LT(scenario.accumulated_cost, 10000) << "Reached goal with way too much cost";
+
+    EXPECT_GT(scenario.edges_attempted, 0) << "Reached goal with 0 edes attempted";
 }
 
 

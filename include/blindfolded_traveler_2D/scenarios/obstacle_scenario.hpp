@@ -18,7 +18,6 @@ namespace BTP
             true_state(s)
         {
         }
-        
 
         virtual const GraphD& getGraph() const override
         {
@@ -48,26 +47,6 @@ namespace BTP
         virtual State& getState()
         {
             return true_state;
-        }
-    };
-
-
-
-
-
-    class WallObstacleScenario : public ObstacleScenario
-    {
-    public:
-        WallObstacleScenario()
-        {
-            int num_rows = 5;
-            Grid grid(5);
-            int start = 0;
-            goal = 24;
-            
-            Obstacles2D::Obstacles o;
-            o.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.4, -0.1, 0.6, 0.95));
-            true_state = ObstacleState(ObstacleState(grid, start, o));
         }
     };
 }
