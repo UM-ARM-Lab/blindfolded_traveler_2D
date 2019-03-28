@@ -126,6 +126,20 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+
+set(Planning_SOURCES
+  src/strategies/myopic_strategies.cpp
+  )
+
+add_library(BTP_2D
+  ${Planning_SOURCES}
+  )
+target_link_libraries(BTP_2D
+  ${catkin_LIBRARIES}
+  )
+
+
+
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/blindfolded_traveler_2D.cpp
@@ -140,11 +154,12 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(wip
-  src/wip.cpp)
+  src/wip.cpp
+  )
 target_link_libraries(wip
   ${catkin_LIBRARIES}
+  BTP_2D
 )
-
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -209,5 +224,6 @@ catkin_add_gtest(test_basic_behavior
   tests/test_basic_behavior.cpp)
 target_link_libraries(test_basic_behavior
   ${catkin_LIBRARIES}
+  BTP_2D
 )
 
