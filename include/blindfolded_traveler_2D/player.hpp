@@ -20,6 +20,7 @@ namespace BTP
         void run(Scenario &scenario, Strategy &strat, double sleep_time_s = 0)
         {
             scenario.viz(viz);
+            std::cout << "Agent starting at " << scenario.getLocation() << " with goal " << strat.goal << "\n";
             
             while(!scenario.completed())
             {

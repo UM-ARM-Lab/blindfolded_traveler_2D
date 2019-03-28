@@ -25,7 +25,7 @@ namespace BTP
         State()
         {}
 
-        virtual double getBlockage(Location l, Action a) = 0;
+        virtual double getBlockage(Location l, Action a) const = 0;
 
         std::vector<Action> getActions(Location l)
         {
@@ -47,7 +47,7 @@ namespace BTP
             State(graph, cur)
         {};
         
-        double getBlockage(Location l, Action a) override
+        double getBlockage(Location l, Action a) const override
         {
             return 1; //TODO define a blockage variable and return based on it
         }
@@ -66,7 +66,7 @@ namespace BTP
         {
         }
 
-        virtual double getBlockage(Location l, Action a) override
+        virtual double getBlockage(Location l, Action a) const override
         {
             std::vector<double> q1 = graph.getNode(l).getValue();
             std::vector<double> q2 = graph.getNode(a).getValue();

@@ -13,7 +13,7 @@ namespace BTP
     public:
         Observation(Location from, Location to, double blockage) :
             from(from), to(to), blockage(blockage) {}
-        bool succeeded() { return blockage >= 1;}
+        bool succeeded() const { return blockage >= 1;}
     };
 
     typedef std::vector<Observation> Observations;

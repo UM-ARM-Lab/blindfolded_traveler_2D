@@ -1,5 +1,6 @@
 #include "scenarios/predefined.hpp"
 #include "strategies/myopic_strategies.hpp"
+#include "scenarios/obstacle_scenario.hpp"
 #include "player.hpp"
 #include "ros/ros.h"
 
@@ -15,8 +16,16 @@ int main(int argc, char **argv)
 
     // IndependentBlockageGridScenario scenario(5);
     // WallObstacleScenario scenario;
-    ManyPossibleWallsScenario scenario;
-    OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
+    // ManyPossibleWallsScenario scenario;
+    // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
+
+    
+    Obstacles2D::Obstacles o;
+    o.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.4, -0.1, 0.6, 0.95));
+    ObstacleState true_state(Grid(5), 0, o);
+    
+    ObstacleScenario scenario(true_state, 24);
+    OmniscientStrategy strat(true_state, 24);
 
     Player player(n);
 
