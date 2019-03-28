@@ -20,12 +20,15 @@ int main(int argc, char **argv)
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
 
     
-    Obstacles2D::Obstacles o;
-    o.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.4, -0.1, 0.6, 0.95));
-    ObstacleState true_state(Grid(5), 0, o);
+    // Obstacles2D::Obstacles o;
+    // o.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.4, -0.1, 0.6, 0.95));
+    // ObstacleState true_state(Grid(5), 0, o);
     
-    ObstacleScenario scenario(true_state, 24);
-    OmniscientStrategy strat(true_state, 24);
+    // ObstacleScenario scenario(true_state, 24);
+    // OmniscientStrategy strat(true_state, 24);
+
+    ManyPossibleWallsScenario scenario;
+    BestExpectedStrategy strat(scenario.getGraph(), scenario.goal, scenario.d);
 
     Player player(n);
 

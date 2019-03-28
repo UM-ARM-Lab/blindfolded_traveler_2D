@@ -36,6 +36,8 @@ namespace BTP
             }
             return neighbors;
         }
+
+        virtual void debug() const = 0;
     };
 
 
@@ -51,11 +53,17 @@ namespace BTP
         {
             return 1; //TODO define a blockage variable and return based on it
         }
+
+        virtual void debug() const override
+        {}
     };
 
 
     class ObstacleState : public State
     {
+    public:
+        Obstacles2D::Obstacles obstacles;
+
     public:
         ObstacleState()
         {
@@ -73,7 +81,14 @@ namespace BTP
             return obstacles.fractionUntilCollision(q1, q2);
         }
         
-        Obstacles2D::Obstacles obstacles;
+
+        virtual void debug() const override
+        {
+            
+            auto& r = dynamic_cast<Obstacles2D::Rect&>(*obstacles.obs[0]);
+            std::cout << r.x1 << ", " << r.y1 << ", " << r.x2 << ", " << r.y2 << "\n";
+        }
+
     };
 }
 

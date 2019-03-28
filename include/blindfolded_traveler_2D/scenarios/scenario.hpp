@@ -6,6 +6,12 @@
 
 namespace BTP
 {
+    inline bool isConsistent(const Observation& obs, const ObstacleState& s)
+    {
+        Observation should(obs.from, obs.to, s.getBlockage(obs.from, obs.to));
+        return should.succeeded() == obs.succeeded();
+    }
+    
 
     class Scenario
     {
