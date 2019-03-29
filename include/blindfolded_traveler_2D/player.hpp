@@ -25,10 +25,17 @@ namespace BTP
         Player(ros::NodeHandle &n) : n(n), viz(n)
         {}
 
-        void displayTitles(Scenario &scenario, Strategy &strat)
+        void displayTitles(const Scenario &scenario, const Strategy &strat)
         {
             viz.vizText(STR("Scenario: ") + scenario.getName(), 1, 0.5, 1.1, "scenario");
             viz.vizText(STR("Strategy: ") + strat.getName(), 1, 0.5, 1.05, "strategy");
+        }
+
+        void reportStats(Scenario &scenario)
+        {
+            std::cout << "Total Cost: " << scenario.accumulated_cost << "\n";
+            std::cout << "Edges Attempted: " << scenario.edges_attempted << "\n";
+            std::cout << "Invalid Attempted: " << scenario.invalid_edges_attempted << "\n";
         }
         
         void run(Scenario &scenario, Strategy &strat, double sleep_time_s = 0)
@@ -50,6 +57,8 @@ namespace BTP
 
             //run one final time to update belief for visualization
             strat.getNextAction(scenario.getLocation(), scenario.getObservations(), viz);
+
+            reportStats(scenario);
         }
     };
 }
