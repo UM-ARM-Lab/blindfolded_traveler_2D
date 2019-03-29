@@ -14,7 +14,7 @@ install:
   - $SH "./src/blindfolded_traveler_2D/docker/setup.sh"
 
 script:
-  - $SH "echo \"TODO Add testing script\""
+  - $SH "./src/blindfolded_traveler_2D/docker/test.sh"
 
 after_script:
   - docker images

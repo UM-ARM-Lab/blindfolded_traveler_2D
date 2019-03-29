@@ -1,0 +1,3 @@
+<launch>
+  <test test-name="test_basic_behavior" pkg="blindfolded_traveler_2D" type="test_basic_behavior" />
+</launch>

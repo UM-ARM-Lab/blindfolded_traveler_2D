@@ -220,10 +220,17 @@ target_link_libraries(wip
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-catkin_add_gtest(test_basic_behavior
-  tests/test_basic_behavior.cpp)
-target_link_libraries(test_basic_behavior
-  ${catkin_LIBRARIES}
-  BTP_2D
-)
+if(CATKIN_ENABLE_TESTING)
+  include_directories(${GTEST_INCLUDE_DIRS})
+  find_package(rostest REQUIRED)
+  add_rostest_gtest(test_basic_behavior tests/basic_behavior.test tests/test_basic_behavior.cpp)
+# catkin_add_gtest(test_basic_behavior
+#   tests/test_basic_behavior.cpp)
+  target_link_libraries(test_basic_behavior
+    ${catkin_LIBRARIES}
+    # ${GTEST_LIBRARIES}
+    BTP_2D
+  )
+
+endif()
 

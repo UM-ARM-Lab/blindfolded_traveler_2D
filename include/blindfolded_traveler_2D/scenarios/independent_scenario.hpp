@@ -9,9 +9,15 @@ namespace BTP
     class IndependentBlockageScenario : public Scenario
     {
     public:
-        IndependentBlockageScenario(IndependentBlockageState s, Location goal):
-            Scenario(s.graph, goal),
-            true_state(s)
+        
+        // IndependentBlockageScenario(IndependentBlockageState s, Location goal):
+        //     Scenario(s.graph, goal),
+        //     true_state(s)
+        // {
+        // }
+        IndependentBlockageScenario(const GraphD& g, Location start, Location goal) :
+            Scenario(g, goal),
+            true_state(getGraph(), start)
         {
         }
         
@@ -43,7 +49,7 @@ namespace BTP
     {
     public:
         IndependentBlockageGridScenario(int num_rows):
-            IndependentBlockageScenario(IndependentBlockageState(Grid(num_rows), 0), num_rows * num_rows - 1)
+            IndependentBlockageScenario(Grid(num_rows), 0, num_rows * num_rows - 1)
         {
         }
     };

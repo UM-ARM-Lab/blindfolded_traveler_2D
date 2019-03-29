@@ -10,3 +10,4 @@ RUN apt update -yq\
     libpcl-dev \
     && rm -rf /var/lib/apt/lists/*
 
+RUN cd /usr/src/gtest && cmake CMakeLists.txt && make && cp *.a /usr/lib

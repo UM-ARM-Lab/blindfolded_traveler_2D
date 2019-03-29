@@ -42,7 +42,7 @@ namespace BTP
     class IndependentBlockageState : public State
     {
     public:
-        IndependentBlockageState(GraphD& graph, Location cur) :
+        IndependentBlockageState(const GraphD& graph, Location cur) :
             State(graph, cur)
         {};
         
