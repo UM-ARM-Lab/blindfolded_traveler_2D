@@ -22,12 +22,16 @@ namespace BTP
         int invalid_edges_attempted;
         Observations obs;
 
+    protected:
+        std::string name;
+
     public:
         Scenario() :
             goal(),
             accumulated_cost(0.0),
             edges_attempted(0),
-            invalid_edges_attempted(0)
+            invalid_edges_attempted(0),
+            name("Unset name")
         {}
         
         Scenario(Location goal) :
@@ -36,6 +40,11 @@ namespace BTP
             edges_attempted(0),
             invalid_edges_attempted(0)
         {}
+
+        virtual std::string getName() const
+        {
+            return name;
+        }
         
         virtual bool completed() const
         {

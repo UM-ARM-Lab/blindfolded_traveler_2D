@@ -29,6 +29,8 @@ int main(int argc, char **argv)
 
     ManyPossibleWallsScenario scenario;
     BestExpectedStrategy strat(scenario.getGraph(), scenario.goal, scenario.d);
+    // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
+    
 
     Player player(n);
 

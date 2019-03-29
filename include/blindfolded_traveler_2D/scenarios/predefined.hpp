@@ -13,6 +13,7 @@ namespace BTP
     public:
         WallObstacleScenario()
         {
+            name = "Wall Scenario";
             int num_rows = 5;
             Grid grid(5);
             int start = 0;
@@ -22,6 +23,7 @@ namespace BTP
             o.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.4, -0.1, 0.6, 0.95));
             true_state = ObstacleState(grid, start, o);
         }
+
     };
 
     class ManyPossibleWallsScenario : public ObstacleScenario
@@ -29,8 +31,10 @@ namespace BTP
     public:
         ObstacleDistribution d;
         
-        ManyPossibleWallsScenario()
+        ManyPossibleWallsScenario() 
         {
+            name = "Wall Distribution";
+                
             std::mt19937 rng;
             rng.seed(time(0));
 

@@ -8,6 +8,14 @@
 
 namespace BTP
 {
+    template <typename T>
+    std::string STR(const T &t)
+    {
+        std::ostringstream os;
+        os << t;
+        return os.str();
+    }
+    
     class Player
     {
     public:
@@ -16,10 +24,17 @@ namespace BTP
 
         Player(ros::NodeHandle &n) : n(n), viz(n)
         {}
+
+        void displayTitles(Scenario &scenario, Strategy &strat)
+        {
+            viz.vizText(STR("Scenario: ") + scenario.getName(), 1, 0.5, 1.1, "scenario");
+            viz.vizText(STR("Strategy: ") + strat.getName(), 1, 0.5, 1.05, "strategy");
+        }
         
         void run(Scenario &scenario, Strategy &strat, double sleep_time_s = 0)
         {
             scenario.viz(viz);
+            displayTitles(scenario, strat);
             std::cout << "Agent starting at " << scenario.getLocation() << " with goal " << strat.goal << "\n";
             
             while(!scenario.completed())

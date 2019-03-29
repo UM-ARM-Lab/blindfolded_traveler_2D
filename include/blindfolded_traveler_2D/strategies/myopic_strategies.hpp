@@ -15,7 +15,9 @@ namespace BTP
         
         OmniscientStrategy(State &true_state, Location goal) :
             Strategy(true_state.graph, goal), true_state(true_state)
-        {}
+        {
+            name = "Omniscient";
+        }
 
         virtual Action getNextAction(Location current, Observations obs) override;
     };
@@ -26,7 +28,9 @@ namespace BTP
     public:
         OptimisticStrategy(GraphD graph, Location goal) :
             Strategy(graph, goal)
-        {}
+        {
+            name = "Optimistic";
+        }
         
         void updateBelief(Observation obs)
         {
@@ -47,7 +51,9 @@ namespace BTP
     public:
         BestExpectedStrategy(GraphD graph, Location goal, ObstacleDistribution d) :
             Strategy(graph, goal), obstacle_distribution(d), invalidated_belief(obstacle_distribution.o.size())
-        {}
+        {
+            name = "Best in expectation";
+        }
 
         void markInvalidEnvironments(Observation obs);
 

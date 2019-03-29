@@ -12,10 +12,13 @@ namespace BTP
     public:
         GraphD graph;
         Location goal;
+
+    protected:
+        std::string name;
         
     public:
         Strategy(GraphD graph, Location goal) :
-            graph(graph), goal(goal)
+            graph(graph), goal(goal), name("unset")
         {}
 
         virtual Action getNextAction(Location current, Observations obs) = 0;
@@ -27,6 +30,11 @@ namespace BTP
             viz.vizPoints(std::vector<Location>{current, goal}, graph);
             viz.vizPath(std::vector<Location>{current, a}, graph);
             return a;
+        }
+
+        virtual std::string getName() const
+        {
+            return name;
         }
     };
 }
