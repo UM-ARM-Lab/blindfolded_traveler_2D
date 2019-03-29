@@ -10,12 +10,13 @@ This explores the "Blindfolded Traveler's Problem". The code is still in the ear
 There is Continuous Integration set up using TravisCI. Follow the docker image and `setup.sh` script for the latest dependencies.
 As an overview, this depends on:
 
-1. ROS (tested on kinetic)
+1. ROS (tested on kinetic). Organize repos in the catkin format, within a catkin workspace. Pull each git repo within `catkin_ws/src`
 1. https://github.com/UM-ARM-Lab/arc_utilities/tree/CleanUpDijkstras (be sure to get the correct branch)
 2. https://github.com/UM-ARM-Lab/unknown_graph_planner/tree/BlindfoldedTraveler (be sure to get the correct branch)
 3. flann: `sudo apt install libpcl-dev`
 
 ## Usage
+1. Build. I use `catkin build` available in catkin-python-tools, though `catkin_make_isolated` should work as well
 1. `roscore`
 2. In a new terminal run `rviz` and open the `graph.rviz` configuration
 2. In a new terminal run `rosrun blind_traveler_2D wip`
