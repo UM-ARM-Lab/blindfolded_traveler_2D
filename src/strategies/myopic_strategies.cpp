@@ -179,6 +179,5 @@ void BestExpectedStrategy::viz(GraphVisualizer &viz) const
             full_belief.obs.push_back(obstacle);
         }
     }
-    std::cout << "full belief size" << full_belief.obs.size() << "\n";
     viz.vizObstacles(full_belief, 0.01, "Belief", "clear red");
 }

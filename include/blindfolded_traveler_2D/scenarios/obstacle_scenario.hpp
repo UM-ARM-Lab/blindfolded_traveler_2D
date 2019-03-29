@@ -9,19 +9,20 @@ namespace BTP
     class ObstacleScenario : public Scenario
     {
     public:
-        ObstacleScenario()
+
+        /**
+         *  Construct a scenario with no initial obstacles. They can be populated later
+         */
+        ObstacleScenario(const GraphD& g, Location start, Location goal) :
+            Scenario(g, goal),
+            true_state(getGraph(), start)
         {
         }        
         
         ObstacleScenario(ObstacleState s, Location goal):
-            Scenario(goal),
+            Scenario(s.graph, goal),
             true_state(s)
         {
-        }
-
-        virtual const GraphD& getGraph() const override
-        {
-            return true_state.graph;
         }
 
         virtual const Location& getLocation() const override

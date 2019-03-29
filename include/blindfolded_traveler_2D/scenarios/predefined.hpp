@@ -11,17 +11,11 @@ namespace BTP
     class WallObstacleScenario : public ObstacleScenario
     {
     public:
-        WallObstacleScenario()
+        WallObstacleScenario() :
+            ObstacleScenario(Grid(5), 0, 24)
         {
             name = "Wall Scenario";
-            int num_rows = 5;
-            Grid grid(5);
-            int start = 0;
-            goal = 24;
-            
-            Obstacles2D::Obstacles o;
-            o.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.4, -0.1, 0.6, 0.95));
-            true_state = ObstacleState(grid, start, o);
+            true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.4, -0.1, 0.6, 0.95));
         }
 
     };
@@ -31,7 +25,8 @@ namespace BTP
     public:
         ObstacleDistribution d;
         
-        ManyPossibleWallsScenario() 
+        ManyPossibleWallsScenario() :
+            ObstacleScenario(Grid(5), 0, 24)
         {
             name = "Wall Distribution";
                 
@@ -39,15 +34,7 @@ namespace BTP
             rng.seed(time(0));
 
             generateDistribution(rng);
-            Obstacles2D::Obstacles o = d.sample(rng);
-            
-            int num_rows = 5;
-            Grid grid(5);
-            int start = 0;
-            goal = 24;
-
-            
-            true_state = ObstacleState(grid, start, o);
+            true_state.obstacles = d.sample(rng);
         }
 
     private:

@@ -10,17 +10,11 @@ namespace BTP
     {
     public:
         IndependentBlockageScenario(IndependentBlockageState s, Location goal):
-            Scenario(goal),
+            Scenario(s.graph, goal),
             true_state(s)
         {
         }
         
-
-        virtual const GraphD& getGraph() const override
-        {
-            return true_state.graph;
-        }
-
         virtual const Location& getLocation() const override
         {
             return true_state.current_location;

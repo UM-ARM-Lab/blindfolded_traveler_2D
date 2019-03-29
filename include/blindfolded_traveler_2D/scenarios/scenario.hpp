@@ -16,29 +16,33 @@ namespace BTP
     class Scenario
     {
     public:
+        GraphD graph;
         Location goal;
         double accumulated_cost;
         int edges_attempted;
         int invalid_edges_attempted;
         Observations obs;
 
+
     protected:
         std::string name;
 
     public:
-        Scenario() :
-            goal(),
+        // Scenario() :
+        //     goal(),
+        //     accumulated_cost(0.0),
+        //     edges_attempted(0),
+        //     invalid_edges_attempted(0),
+        //     name("Unset name")
+        // {}
+        
+        Scenario(GraphD graph, Location goal) :
+            graph(graph),
+            goal(goal),
             accumulated_cost(0.0),
             edges_attempted(0),
             invalid_edges_attempted(0),
             name("Unset name")
-        {}
-        
-        Scenario(Location goal) :
-            goal(goal),
-            accumulated_cost(0.0),
-            edges_attempted(0),
-            invalid_edges_attempted(0)
         {}
 
         virtual std::string getName() const
@@ -51,7 +55,10 @@ namespace BTP
             return getLocation() == goal;
         }
 
-        virtual const GraphD& getGraph() const = 0;
+        virtual const GraphD& getGraph() const
+        {
+            return graph;
+        }
 
         virtual const Location& getLocation() const = 0;
 
