@@ -161,3 +161,24 @@ Action BestExpectedStrategy::getNextAction(Location current, Observations obs)
                                {return p1.second < p2.second;});
     return pr->first;
 }
+
+
+void BestExpectedStrategy::viz(GraphVisualizer &viz) const
+{
+    Obstacles2D::Obstacles full_belief;
+    for(int i=0; i<obstacle_distribution.o.size(); i++)
+    {
+        
+        for(const auto& obstacle: obstacle_distribution.o[i].obs)
+        {
+            if(invalidated_belief[i])
+            {
+                full_belief.obs.push_back(std::make_shared<Obstacles2D::Empty>());
+                continue;
+            }
+            full_belief.obs.push_back(obstacle);
+        }
+    }
+    std::cout << "full belief size" << full_belief.obs.size() << "\n";
+    viz.vizObstacles(full_belief, 0.01, "Belief", "clear red");
+}

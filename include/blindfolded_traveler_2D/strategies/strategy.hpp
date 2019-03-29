@@ -32,6 +32,10 @@ namespace BTP
             return a;
         }
 
+        virtual void viz(GraphVisualizer &viz) const
+        {
+        }
+
         virtual std::string getName() const
         {
             return name;

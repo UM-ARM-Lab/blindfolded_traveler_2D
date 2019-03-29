@@ -9,7 +9,7 @@
 namespace BTP
 {
     template <typename T>
-    std::string STR(const T &t)
+    std::string Str(const T &t)
     {
         std::ostringstream os;
         os << t;
@@ -27,8 +27,8 @@ namespace BTP
 
         void displayTitles(const Scenario &scenario, const Strategy &strat)
         {
-            viz.vizText(STR("Scenario: ") + scenario.getName(), 1, 0.5, 1.1, "scenario");
-            viz.vizText(STR("Strategy: ") + strat.getName(), 1, 0.5, 1.05, "strategy");
+            viz.vizText(Str("Scenario: ") + scenario.getName(), 1, 0.5, 1.1, "scenario");
+            viz.vizText(Str("Strategy: ") + strat.getName(), 1, 0.5, 1.05, "strategy");
         }
 
         void reportStats(Scenario &scenario)
@@ -41,6 +41,7 @@ namespace BTP
         void run(Scenario &scenario, Strategy &strat, double sleep_time_s = 0)
         {
             scenario.viz(viz);
+
             displayTitles(scenario, strat);
             std::cout << "Agent starting at " << scenario.getLocation() << " with goal " << strat.goal << "\n";
             
@@ -50,7 +51,7 @@ namespace BTP
                 std::cout << "Agent at " << scenario.getLocation() << " taking action " << a << "\n";
                 
                 scenario.transition(a);
-                
+                strat.viz(viz);                
                 
                 ros::Duration(sleep_time_s).sleep();
             }

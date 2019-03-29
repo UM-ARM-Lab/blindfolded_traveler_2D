@@ -68,6 +68,8 @@ namespace BTP
         Action planPathInEnv(const State &s);
 
         virtual Action getNextAction(Location current, Observations obs) override;
+
+        virtual void viz(GraphVisualizer &viz) const override;
     };
 }
 
