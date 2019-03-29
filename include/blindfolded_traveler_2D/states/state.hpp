@@ -14,15 +14,12 @@ namespace BTP
     class State
     {
     public:
-        GraphD graph;
+        const GraphD& graph;
         Location current_location;
 
     public:
-        State(GraphD graph, Location cur) :
+        State(const GraphD& graph, Location cur) :
             graph(graph), current_location(cur)
-        {}
-
-        State()
         {}
 
         virtual double getBlockage(Location l, Action a) const = 0;
@@ -45,7 +42,7 @@ namespace BTP
     class IndependentBlockageState : public State
     {
     public:
-        IndependentBlockageState(GraphD graph, Location cur) :
+        IndependentBlockageState(GraphD& graph, Location cur) :
             State(graph, cur)
         {};
         
@@ -65,11 +62,12 @@ namespace BTP
         Obstacles2D::Obstacles obstacles;
 
     public:
-        ObstacleState()
+        ObstacleState(const GraphD& graph, Location cur):
+            State(graph, cur)
         {
         }
         
-        ObstacleState(GraphD graph, Location cur, Obstacles2D::Obstacles obstacles):
+        ObstacleState(const GraphD& graph, Location cur, Obstacles2D::Obstacles obstacles):
             State(graph, cur), obstacles(obstacles)
         {
         }
