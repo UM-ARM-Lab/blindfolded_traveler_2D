@@ -14,11 +14,11 @@ namespace BTP
     class State
     {
     public:
-        const GraphD& graph;
+        const GraphD* graph;
         Location current_location;
 
     public:
-        State(const GraphD& graph, Location cur) :
+        State(const GraphD* graph, Location cur) :
             graph(graph), current_location(cur)
         {}
 
@@ -27,7 +27,7 @@ namespace BTP
         std::vector<Action> getActions(Location l)
         {
             std::vector<Action> neighbors;
-            for(auto edge: graph.getNode(l).getOutEdges())
+            for(auto edge: graph->getNode(l).getOutEdges())
             {
                 neighbors.push_back(edge.getToIndex());
             }
@@ -42,7 +42,7 @@ namespace BTP
     class IndependentBlockageState : public State
     {
     public:
-        IndependentBlockageState(const GraphD& graph, Location cur) :
+        IndependentBlockageState(const GraphD* graph, Location cur) :
             State(graph, cur)
         {};
         
@@ -62,20 +62,20 @@ namespace BTP
         Obstacles2D::Obstacles obstacles;
 
     public:
-        ObstacleState(const GraphD& graph, Location cur):
+        ObstacleState(const GraphD* graph, Location cur):
             State(graph, cur)
         {
         }
         
-        ObstacleState(const GraphD& graph, Location cur, Obstacles2D::Obstacles obstacles):
+        ObstacleState(const GraphD* graph, Location cur, Obstacles2D::Obstacles obstacles):
             State(graph, cur), obstacles(obstacles)
         {
         }
 
         virtual double getBlockage(Location l, Action a) const override
         {
-            std::vector<double> q1 = graph.getNode(l).getValue();
-            std::vector<double> q2 = graph.getNode(a).getValue();
+            std::vector<double> q1 = graph->getNode(l).getValue();
+            std::vector<double> q2 = graph->getNode(a).getValue();
             return obstacles.fractionUntilCollision(q1, q2);
         }
         

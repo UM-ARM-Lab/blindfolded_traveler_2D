@@ -10,14 +10,9 @@ namespace BTP
     {
     public:
         
-        // IndependentBlockageScenario(IndependentBlockageState s, Location goal):
-        //     Scenario(s.graph, goal),
-        //     true_state(s)
-        // {
-        // }
         IndependentBlockageScenario(const GraphD& g, Location start, Location goal) :
             Scenario(g, goal),
-            true_state(getGraph(), start)
+            true_state(&getGraph(), start)
         {
         }
         

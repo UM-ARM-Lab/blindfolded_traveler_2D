@@ -4,7 +4,7 @@
 #include "strategies/strategy.hpp"
 #include "graph_planner/a_star.hpp"
 #include "arc_utilities/eigen_helpers.hpp"
-#include "distributions/obstacle_distribution.hpp"
+#include "beliefs/obstacle_distribution.hpp"
 
 namespace BTP
 {
@@ -14,7 +14,7 @@ namespace BTP
         State &true_state;
         
         OmniscientStrategy(State &true_state, Location goal) :
-            Strategy(true_state.graph, goal), true_state(true_state)
+            Strategy(*true_state.graph, goal), true_state(true_state)
         {
             name = "Omniscient";
         }
@@ -45,31 +45,24 @@ namespace BTP
     class BestExpectedStrategy : public Strategy
     {
     public:
-        ObstacleDistribution obstacle_distribution;
+        ObstacleBelief bel;
         std::vector<bool> invalidated_belief;
 
     public:
-        BestExpectedStrategy(GraphD graph, Location goal, ObstacleDistribution d) :
-            Strategy(graph, goal), obstacle_distribution(d), invalidated_belief(obstacle_distribution.o.size())
+        BestExpectedStrategy(GraphD graph, Location goal, ObstacleBelief bel) :
+            Strategy(graph, goal), bel(bel)
         {
             name = "Best in expectation";
-        }
-
-        void markInvalidEnvironments(Observation obs);
-
-        void updateBelief(Observation obs)
-        {
-            using namespace arc_dijkstras;
-            GraphEdge& e = graph.getEdge(obs.from, obs.to);
-            e.setValidity(obs.succeeded() ? EDGE_VALIDITY::VALID : EDGE_VALIDITY::INVALID);
-            markInvalidEnvironments(obs);
         }
 
         Action planPathInEnv(const State &s);
 
         virtual Action getNextAction(Location current, Observations obs) override;
 
-        virtual void viz(GraphVisualizer &viz) const override;
+        void viz(GraphVisualizer &viz) const
+        {
+            bel.viz(viz);
+        }
     };
 }
 

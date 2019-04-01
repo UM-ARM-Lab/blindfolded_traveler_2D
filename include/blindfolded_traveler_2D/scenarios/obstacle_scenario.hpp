@@ -15,13 +15,13 @@ namespace BTP
          */
         ObstacleScenario(const GraphD& g, Location start, Location goal) :
             Scenario(g, goal),
-            true_state(getGraph(), start)
+            true_state(&getGraph(), start)
         {
         }        
         
         ObstacleScenario(ObstacleState s, Location goal):
-            Scenario(s.graph, goal),
-            true_state(s)
+            Scenario(*s.graph, goal),
+            true_state(s)  //Very dangerous, s stores a reference to the graph which could go out of scope
         {
         }
 

@@ -64,26 +64,6 @@ Action OptimisticStrategy::getNextAction(Location current, Observations obs)
 /******************************
  **   BestExpectedStrategy
  ******************************/
-void BestExpectedStrategy::markInvalidEnvironments(Observation obs)
-{
-    for(int i=0; i<obstacle_distribution.o.size(); i++)
-    {
-        if(invalidated_belief[i])
-        {
-            continue;
-        }
-        ObstacleState h(graph, obs.from, obstacle_distribution.o[i]);
-        invalidated_belief[i] = !isConsistent(obs, h);
-    }
-
-    double count_valid = 0;
-    for(auto inv: invalidated_belief)
-    {
-        count_valid += !inv;
-    }
-    std::cout << count_valid << " valid possible obstacle configurations\n";
-}
-
 Action BestExpectedStrategy::planPathInEnv(const State &s)
 {
     using namespace arc_dijkstras;
@@ -129,8 +109,9 @@ Action BestExpectedStrategy::getNextAction(Location current, Observations obs)
 {
     if(obs.size() > 0)
     {
-        updateBelief(obs.back());
+        bel.update(obs.back());
     }
+    bel.setLocation(current);
 
     if(current == goal)
     {
@@ -139,21 +120,20 @@ Action BestExpectedStrategy::getNextAction(Location current, Observations obs)
 
     std::map<Location, double> actions;
     using pair_type = decltype(actions)::value_type;
-    for(int i=0; i<obstacle_distribution.o.size(); i++)
+    for(WeightedState &ws: bel.getWeightedStates())
     {
-        if(invalidated_belief[i])
+        if(ws.second == 0)
         {
             continue;
         }
                 
-        const auto &obstacles = obstacle_distribution.o[i];
-        Action a = planPathInEnv(ObstacleState(graph, current, obstacles));
+        Action a = planPathInEnv(*ws.first);
 
         if(actions.count(a) == 0)
         {
             actions[a] = 0;
         }
-        actions[a] += obstacle_distribution.weights[i];
+        actions[a] += ws.second;
     }
 
     auto pr = std::max_element(actions.begin(), actions.end(),
@@ -163,21 +143,3 @@ Action BestExpectedStrategy::getNextAction(Location current, Observations obs)
 }
 
 
-void BestExpectedStrategy::viz(GraphVisualizer &viz) const
-{
-    Obstacles2D::Obstacles full_belief;
-    for(int i=0; i<obstacle_distribution.o.size(); i++)
-    {
-        
-        for(const auto& obstacle: obstacle_distribution.o[i].obs)
-        {
-            if(invalidated_belief[i])
-            {
-                full_belief.obs.push_back(std::make_shared<Obstacles2D::Empty>());
-                continue;
-            }
-            full_belief.obs.push_back(obstacle);
-        }
-    }
-    viz.vizObstacles(full_belief, 0.01, "Belief", "clear red");
-}
