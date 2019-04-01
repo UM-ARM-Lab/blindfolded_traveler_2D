@@ -4,6 +4,7 @@
 #include "graph_planner/graph_visualization.hpp"
 #include "states/state.hpp"
 #include "observations.hpp"
+#include "beliefs/belief.hpp"
 #include <random>
 
 namespace BTP
@@ -16,11 +17,11 @@ namespace BTP
     }
 
 
-    typedef std::pair<std::shared_ptr<State>, double> WeightedState;
+
 
     
 
-    class ObstacleBelief
+    class ObstacleBelief : public ExplicitBelief
     {
     public:
         GraphD graph;
@@ -46,7 +47,6 @@ namespace BTP
             
         }
 
-        // Obstacles2D::Obstacles sample(std::mt19937 &rng) const
         std::shared_ptr<ObstacleState> sampleObstacleState(std::mt19937 &rng) const
         {
             std::uniform_real_distribution<double> dist(0.0, sum);
@@ -62,12 +62,12 @@ namespace BTP
             assert(false && "random number selected out of bounds");
         }
 
-        std::shared_ptr<State> sample(std::mt19937 &rng) const
+        virtual std::shared_ptr<State> sample(std::mt19937 &rng) const
         {
             return std::static_pointer_cast<State>(sampleObstacleState(rng));
         }
 
-        std::vector<WeightedState> getWeightedStates() const
+        virtual std::vector<WeightedState> getWeightedStates() const
         {
             std::vector<WeightedState> ws;
             for(int i=0; i<o.size(); i++)
@@ -112,7 +112,7 @@ namespace BTP
             return cur;
         }
         
-        void update(Observation obs)
+        virtual void update(Observation obs)
         {
             using namespace arc_dijkstras;
             GraphEdge& e = graph.getEdge(obs.from, obs.to);

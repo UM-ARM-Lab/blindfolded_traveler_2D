@@ -6,14 +6,14 @@
 
 namespace BTP
 {
-    // typedef std::pair<S
+    typedef std::pair<std::shared_ptr<State>, double> WeightedState;
     
     class ExplicitBelief
     {
     public:
         virtual std::shared_ptr<State> sample(std::mt19937 &rng) const = 0;
-        // getWeightedStates
-        // virtual void update(
+        virtual std::vector<WeightedState> getWeightedStates() const = 0;
+        virtual void update(Observation obs) = 0;
     };
 }
 
