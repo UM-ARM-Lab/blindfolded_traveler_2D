@@ -42,6 +42,7 @@ namespace BTP
         virtual Action getNextAction(Location current, Observations obs) override;
     };
 
+    
     class BestExpectedStrategy : public Strategy
     {
     public:

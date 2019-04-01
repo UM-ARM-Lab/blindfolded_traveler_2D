@@ -11,7 +11,8 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "wip_BTP");
     ros::NodeHandle n;
-
+    std::mt19937 rng;
+    rng.seed(time(0));
 
 
     // IndependentBlockageGridScenario scenario(5);
@@ -27,7 +28,7 @@ int main(int argc, char **argv)
     // ObstacleScenario scenario(true_state, 24);
     // OmniscientStrategy strat(true_state, 24);
 
-    ManyPossibleWallsScenario scenario;
+    ManyPossibleWallsScenario scenario(rng);
     BestExpectedStrategy strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
     

@@ -85,7 +85,8 @@ namespace BTP
         {
         }
 
-    protected:
+        
+    public:  //Public for testing omniscient strategies
         virtual State& getState() = 0;
 
     };

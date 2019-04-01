@@ -27,7 +27,7 @@ namespace BTP
         }
 
 
-    protected:
+    public: 
         IndependentBlockageState true_state;
 
         virtual State& getState()

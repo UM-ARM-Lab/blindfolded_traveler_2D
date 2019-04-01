@@ -43,7 +43,7 @@ namespace BTP
 
 
 
-    protected:
+    public:
         ObstacleState true_state;
 
         virtual State& getState()

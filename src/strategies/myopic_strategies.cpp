@@ -88,18 +88,6 @@ Action BestExpectedStrategy::planPathInEnv(const State &s)
         edge_validity_check_fn,
         distance_fn, 
         &distanceHeuristic, true);
-    // std::cout << "Path found with cost " << result.second << "\n";
-
-    // if(result.second > 100000)
-    // {
-    //     s.debug();
-    //     ros::NodeHandle n;
-    //     GraphVisualizer viz(n);
-    //     auto &os = dynamic_cast<const ObstacleState&>(s);
-    //     ros::Duration(1.0).sleep();
-    //     viz.vizObstacles(os.obstacles);
-    //     ros::Duration(1.0).sleep();
-    // }
             
     return result.first[1];
 }

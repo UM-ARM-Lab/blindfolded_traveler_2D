@@ -161,6 +161,14 @@ target_link_libraries(wip
   BTP_2D
 )
 
+add_executable(run_trials
+  src/run_trials.cpp
+  )
+target_link_libraries(run_trials
+  ${catkin_LIBRARIES}
+  BTP_2D
+)
+
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
 ## target back to the shorter version for ease of user use

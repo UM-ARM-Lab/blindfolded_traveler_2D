@@ -25,15 +25,12 @@ namespace BTP
     public:
         ObstacleBelief bel;
         
-        ManyPossibleWallsScenario() :
+        ManyPossibleWallsScenario(std::mt19937& rng) :
             ObstacleScenario(Grid(5), 0, 24),
             bel(getGraph(), getLocation())
         {
             name = "Wall Distribution";
                 
-            std::mt19937 rng;
-            rng.seed(time(0));
-
             generateDistribution(rng);
             true_state = *bel.sampleObstacleState(rng);
         }
