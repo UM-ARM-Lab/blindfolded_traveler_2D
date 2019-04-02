@@ -3,6 +3,7 @@
 #include "scenarios/obstacle_scenario.hpp"
 #include "player.hpp"
 #include "ros/ros.h"
+#include "arc_utilities/timing.hpp"
 
 using namespace BTP;
 
@@ -38,10 +39,15 @@ static double seed;
 
 void test(Scenario &scenario, Strategy &strategy)
 {
+    PROFILE_REINITIALIZE(0,0);
     ros::NodeHandle n;
     Player player(n);
     ros::Duration(1).sleep(); //Sleep to allow publishers to connect
     player.run(scenario, strategy, 0.2);
+
+    std::string filename = scenario.getName() + "_" + strategy.getName() + "_" +
+        arc_helpers::GetCurrentTimeAsString();
+    PROFILE_WRITE_ALL_FEWER_THAN(filename, 100);
 }
 
 

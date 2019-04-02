@@ -4,6 +4,7 @@
 #include "scenarios/scenario.hpp"
 #include "strategies/strategy.hpp"
 #include "graph_planner/graph_visualization.hpp"
+#include "arc_utilities/timing.hpp"
 
 
 namespace BTP
@@ -37,6 +38,13 @@ namespace BTP
             std::cout << "Edges Attempted: " << scenario.edges_attempted << "\n";
             std::cout << "Invalid Attempted: " << scenario.invalid_edges_attempted << "\n";
         }
+
+        void recordStats(Scenario &scenario)
+        {
+            PROFILE_RECORD_DOUBLE("ExecutionCost", scenario.accumulated_cost);
+            PROFILE_RECORD_DOUBLE("EdgesAttempted", scenario.edges_attempted);
+            PROFILE_RECORD_DOUBLE("InvalidEdgesAttempted", scenario.invalid_edges_attempted);
+        }
         
         void run(Scenario &scenario, Strategy &strat, double sleep_time_s = 0)
         {
@@ -44,10 +52,14 @@ namespace BTP
 
             displayTitles(scenario, strat);
             std::cout << "Agent starting at " << scenario.getLocation() << " with goal " << strat.goal << "\n";
-            
+
+
+
             while(!scenario.completed())
             {
+                PROFILE_START("Planning Action");
                 Action a = strat.getNextAction(scenario.getLocation(), scenario.getObservations(), viz);
+                PROFILE_RECORD("Planning Action");
                 std::cout << "Agent at " << scenario.getLocation() << " taking action " << a << "\n";
                 
                 scenario.transition(a);
@@ -60,6 +72,7 @@ namespace BTP
             strat.getNextAction(scenario.getLocation(), scenario.getObservations(), viz);
 
             reportStats(scenario);
+            recordStats(scenario);
         }
     };
 }

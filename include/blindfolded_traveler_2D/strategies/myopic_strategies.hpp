@@ -47,7 +47,6 @@ namespace BTP
     {
     public:
         ObstacleBelief bel;
-        std::vector<bool> invalidated_belief;
 
     public:
         BestExpectedStrategy(GraphD graph, Location goal, ObstacleBelief bel) :
@@ -60,7 +59,7 @@ namespace BTP
 
         virtual Action getNextAction(Location current, Observations obs) override;
 
-        void viz(GraphVisualizer &viz) const
+        void viz(GraphVisualizer &viz) const override
         {
             bel.viz(viz);
         }

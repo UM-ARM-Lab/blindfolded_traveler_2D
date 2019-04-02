@@ -118,6 +118,11 @@ namespace BTP
             GraphEdge& e = graph.getEdge(obs.from, obs.to);
             e.setValidity(obs.succeeded() ? EDGE_VALIDITY::VALID : EDGE_VALIDITY::INVALID);
             markInvalidEnvironments(obs);
+
+            if(obs.succeeded())
+            {
+                cur = obs.to;
+            }
         }
 
 
