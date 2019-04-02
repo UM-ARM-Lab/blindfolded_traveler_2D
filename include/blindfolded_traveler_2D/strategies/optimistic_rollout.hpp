@@ -43,12 +43,12 @@ namespace BTP
             
             for(int i=0; i<num_rollouts; i++)
             {
-                std::shared_ptr<State> sampled_state = bel.sample(rng);
+                std::unique_ptr<State> sampled_state = bel.sample(rng);
                 auto possible_actions = sampled_state->getActions(sampled_state->current_location);
 
                 for(auto initial_action: possible_actions)
                 {
-                    std::shared_ptr<State> rollout_state = sampled_state->clone();
+                    std::unique_ptr<State> rollout_state = sampled_state->clone();
                     GraphD rollout_graph = graph;
                     double rollout_cost = 0;
                     Observation ob = transition(rollout_state.get(), initial_action, rollout_cost);

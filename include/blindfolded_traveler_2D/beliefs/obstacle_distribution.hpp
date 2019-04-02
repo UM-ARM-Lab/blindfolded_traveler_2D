@@ -37,6 +37,16 @@ namespace BTP
         ObstacleBelief(GraphD graph, Location cur) :
             graph(graph), cur(cur)
         {}
+
+        virtual std::shared_ptr<Belief> clone() const
+        {
+            std::shared_ptr<ObstacleBelief> b = std::make_shared<ObstacleBelief>(graph, cur);
+            b->o = o;
+            b->weights = weights;
+            b->cum_sum = cum_sum;
+            b->sum = sum;
+            return b;
+        }
         
         void addElem(Obstacles2D::Obstacles obs, double weight)
         {
@@ -47,7 +57,7 @@ namespace BTP
             
         }
 
-        std::shared_ptr<ObstacleState> sampleObstacleState(std::mt19937 &rng) const
+        std::unique_ptr<ObstacleState> sampleObstacleState(std::mt19937 &rng) const
         {
             std::uniform_real_distribution<double> dist(0.0, sum);
             double r = dist(rng);
@@ -56,15 +66,17 @@ namespace BTP
             {
                 if(r <= cum_sum[i])
                 {
-                    return std::make_shared<ObstacleState>(&graph, cur, o[i]);
+                    return std::make_unique<ObstacleState>(&graph, cur, o[i]);
                 }
             }
             assert(false && "random number selected out of bounds");
         }
 
-        virtual std::shared_ptr<State> sample(std::mt19937 &rng) const
+        virtual std::unique_ptr<State> sample(std::mt19937 &rng) const
         {
-            return std::static_pointer_cast<State>(sampleObstacleState(rng));
+            std::unique_ptr<ObstacleState> os = sampleObstacleState(rng);
+            std::unique_ptr<State> s(std::move(os));
+            return s;
         }
 
         virtual std::vector<WeightedState> getWeightedStates() const
