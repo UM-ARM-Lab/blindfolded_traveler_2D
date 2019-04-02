@@ -22,6 +22,8 @@ namespace BTP
             graph(graph), current_location(cur)
         {}
 
+        virtual std::shared_ptr<State> clone() const = 0;
+
         virtual double getBlockage(Location l, Action a) const = 0;
 
         std::vector<Action> getActions(Location l)
@@ -45,6 +47,11 @@ namespace BTP
         IndependentBlockageState(const GraphD* graph, Location cur) :
             State(graph, cur)
         {};
+
+        virtual std::shared_ptr<State> clone() const override
+        {
+            return std::make_shared<IndependentBlockageState>(graph, current_location);
+        }
         
         double getBlockage(Location l, Action a) const override
         {
@@ -71,6 +78,12 @@ namespace BTP
             State(graph, cur), obstacles(obstacles)
         {
         }
+
+        virtual std::shared_ptr<State> clone() const override
+        {
+            return std::make_shared<ObstacleState>(graph, current_location, obstacles);
+        }
+
 
         virtual double getBlockage(Location l, Action a) const override
         {

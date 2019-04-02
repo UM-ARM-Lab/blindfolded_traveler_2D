@@ -1,5 +1,6 @@
 #include "scenarios/predefined.hpp"
 #include "strategies/myopic_strategies.hpp"
+#include "strategies/optimistic_rollout.hpp"
 #include "scenarios/obstacle_scenario.hpp"
 #include "player.hpp"
 #include "ros/ros.h"
@@ -75,6 +76,14 @@ void test3()
     test(scenario, strat);
 }
 
+void test4()
+{
+    rng.seed(seed);
+    ManyPossibleWallsScenario scenario(rng);
+    OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    test(scenario, strat);
+}
+
 
 
 
@@ -84,6 +93,7 @@ void testAll()
     test1();
     test2();
     test3();
+    test4();
 }
 
 

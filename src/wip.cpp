@@ -1,5 +1,6 @@
 #include "scenarios/predefined.hpp"
 #include "strategies/myopic_strategies.hpp"
+#include "strategies/optimistic_rollout.hpp"
 #include "scenarios/obstacle_scenario.hpp"
 #include "player.hpp"
 #include "ros/ros.h"
@@ -29,8 +30,9 @@ int main(int argc, char **argv)
     // OmniscientStrategy strat(true_state, 24);
 
     ManyPossibleWallsScenario scenario(rng);
-    BestExpectedStrategy strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    // BestExpectedStrategy strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
+    OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
     
 
     Player player(n);
