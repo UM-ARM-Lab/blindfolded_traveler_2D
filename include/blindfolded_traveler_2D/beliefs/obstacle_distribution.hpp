@@ -152,7 +152,9 @@ namespace BTP
                     full_belief.obs.push_back(obstacle);
                 }
             }
-            viz.vizObstacles(full_belief, 0.01, "Belief", "clear red");
+            auto color = colorLookup("clear red");
+            color.a = std::max(1.0/sum, 1.0/255);
+            viz.vizObstacles(full_belief, 0.01, "Belief", color);
         }
     };
 }

@@ -38,7 +38,7 @@ namespace BTP
     private:
         void generateDistribution(std::mt19937 &rng)
         {
-            for(int i=0; i<100; i++)
+            for(int i=0; i<1000; i++)
             {
                 std::uniform_real_distribution<double> rand_offset(-0.2, 0.2);
                 double dx = rand_offset(rng);
