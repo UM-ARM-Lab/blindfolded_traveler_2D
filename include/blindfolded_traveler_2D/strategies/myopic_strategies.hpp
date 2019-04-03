@@ -42,6 +42,30 @@ namespace BTP
         virtual Action getNextAction(Location current, Observations obs) override;
     };
 
+
+    class OptimisticWithPrior : public Strategy
+    {
+    public:
+        ObstacleBelief bel;
+        int num_samples;
+    public:
+        OptimisticWithPrior(GraphD graph, Location goal, ObstacleBelief bel):
+            Strategy(graph, goal), bel(bel), num_samples(100)
+        {
+            name = "OptimisticWithPrior";
+        }
+
+        void updateEdges();
+
+        virtual Action getNextAction(Location current, Observations obs) override;
+
+        void viz(GraphVisualizer &viz) const override
+        {
+            bel.viz(viz);
+        }
+
+    };
+
     
     class BestExpectedStrategy : public Strategy
     {

@@ -84,6 +84,14 @@ void test4()
     test(scenario, strat);
 }
 
+void test5()
+{
+    rng.seed(seed);
+    ManyPossibleWallsScenario scenario(rng);
+    OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    test(scenario, strat);
+}
+
 
 
 
@@ -94,6 +102,7 @@ void testAll()
     test2();
     test3();
     test4();
+    test5();
 }
 
 

@@ -32,7 +32,8 @@ int main(int argc, char **argv)
     ManyPossibleWallsScenario scenario(rng);
     // BestExpectedStrategy strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
-    OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    // OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, scenario.bel);
     
 
     Player player(n);

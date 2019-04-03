@@ -61,6 +61,72 @@ Action OptimisticStrategy::getNextAction(Location current, Observations obs)
 }
 
 
+
+/******************************
+ **   OptimisticWithPrior Strategy
+ ******************************/
+
+
+
+void OptimisticWithPrior::updateEdges()
+{
+    std::mt19937 rng;
+    rng.seed(time(0));
+
+    std::vector<std::unique_ptr<State>> sampled_states;
+
+    for(int i=0; i<num_samples; i++)
+    {
+        sampled_states.push_back(bel.sample(rng));
+    }
+    
+    for(auto &n: graph.getNodes())
+    {
+        for(auto &e: n.getOutEdges())
+        {
+            if(e.getValidity() == arc_dijkstras::EDGE_VALIDITY::INVALID)
+            {
+                continue;
+            }
+
+            bool exists_valid = false;
+            for(const auto& s: sampled_states)
+            {
+                if(s->getBlockage(e.getFromIndex(), e.getToIndex()) == 1)
+                {
+                    exists_valid = true;
+                    break;
+                }
+            }
+
+            if(!exists_valid)
+            {
+                e.setValidity(arc_dijkstras::EDGE_VALIDITY::INVALID);
+            }
+        }
+    }
+}
+
+Action OptimisticWithPrior::getNextAction(Location current, Observations obs)
+{
+    if(obs.size() > 0)
+    {
+        bel.update(obs.back());
+        updateEdges();
+    }
+
+    if(current == goal)
+    {
+        return goal;
+    }
+
+    auto result = arc_dijkstras::AstarLogging<std::vector<double>>::PerformAstar(
+        graph, current, goal, &distanceHeuristic, true);
+
+    return result.first[1];
+}
+
+
 /******************************
  **   BestExpectedStrategy
  ******************************/
@@ -106,7 +172,7 @@ Action BestExpectedStrategy::getNextAction(Location current, Observations obs)
         return goal;
     }
 
-    std::map<Location, double> actions;
+    std::map<Action, double> actions;
     using pair_type = decltype(actions)::value_type;
     for(WeightedState &ws: bel.getWeightedStates())
     {
