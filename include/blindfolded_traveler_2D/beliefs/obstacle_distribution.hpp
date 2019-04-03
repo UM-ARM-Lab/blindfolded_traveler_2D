@@ -74,9 +74,7 @@ namespace BTP
 
         virtual std::unique_ptr<State> sample(std::mt19937 &rng) const
         {
-            std::unique_ptr<ObstacleState> os = sampleObstacleState(rng);
-            std::unique_ptr<State> s(std::move(os));
-            return s;
+            return sampleObstacleState(rng);
         }
 
         virtual std::vector<WeightedState> getWeightedStates() const
