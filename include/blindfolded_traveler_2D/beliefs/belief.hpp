@@ -3,6 +3,7 @@
 #include "states/state.hpp"
 #include "observations.hpp"
 #include <random>
+#include "graph_planner/graph_visualization.hpp"
 
 namespace BTP
 {
@@ -13,7 +14,10 @@ namespace BTP
     {
     public:
         virtual std::unique_ptr<State> sample(std::mt19937 &rng) const = 0;
-        virtual std::shared_ptr<Belief> clone() const = 0;
+        virtual double getProbability(Observation obs) const = 0;
+        virtual std::unique_ptr<Belief> clone() const = 0;
+        virtual void update(Observation obs) = 0;
+        virtual void viz(GraphVisualizer &viz) const = 0;
     };
     
     
@@ -21,7 +25,7 @@ namespace BTP
     {
     public:
         virtual std::vector<WeightedState> getWeightedStates() const = 0;
-        virtual void update(Observation obs) = 0;
+        virtual std::unique_ptr<ExplicitBelief> cloneExplicit() const = 0;
     };
 }
 

@@ -10,26 +10,23 @@ namespace BTP
     {
     public:
         int num_rollouts;
-        ObstacleBelief bel;
+        std::unique_ptr<Belief> bel;
         
     public:
-        OptimisticRollout(GraphD graph, Location goal, ObstacleBelief bel) :
-            Strategy(graph, goal), bel(bel), num_rollouts(100)
+        OptimisticRollout(GraphD graph, Location goal, const Belief &bel) :
+            Strategy(graph, goal), bel(bel.clone()), num_rollouts(100)
         {
             name = "Optimistic Rollout";
         }
-
-
 
 
         virtual Action getNextAction(Location current, Observations obs) override
         {
             if(obs.size() > 0)
             {
-                bel.update(obs.back());
+                bel->update(obs.back());
                 updateGraph(graph, obs.back());
             }
-            bel.setLocation(current);
 
             if(current == goal)
             {
@@ -43,7 +40,7 @@ namespace BTP
             
             for(int i=0; i<num_rollouts; i++)
             {
-                std::unique_ptr<State> sampled_state = bel.sample(rng);
+                std::unique_ptr<State> sampled_state = bel->sample(rng);
                 auto possible_actions = sampled_state->getActions(sampled_state->current_location);
 
                 for(auto initial_action: possible_actions)
@@ -73,7 +70,7 @@ namespace BTP
 
         void viz(GraphVisualizer &viz) const override
         {
-            bel.viz(viz);
+            bel->viz(viz);
         }
 
 

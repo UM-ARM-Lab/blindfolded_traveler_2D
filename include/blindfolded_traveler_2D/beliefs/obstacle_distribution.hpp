@@ -38,9 +38,14 @@ namespace BTP
             graph(graph), cur(cur)
         {}
 
-        virtual std::shared_ptr<Belief> clone() const
+        virtual std::unique_ptr<Belief> clone() const override
         {
-            std::shared_ptr<ObstacleBelief> b = std::make_shared<ObstacleBelief>(graph, cur);
+            return cloneExplicit();
+        }
+
+        virtual std::unique_ptr<ExplicitBelief> cloneExplicit() const override
+        {
+            std::unique_ptr<ObstacleBelief> b = std::make_unique<ObstacleBelief>(graph, cur);
             b->o = o;
             b->weights = weights;
             b->cum_sum = cum_sum;
@@ -54,7 +59,6 @@ namespace BTP
             weights.push_back(weight);
             sum += weight;
             cum_sum.push_back(sum);
-            
         }
 
         std::unique_ptr<ObstacleState> sampleObstacleState(std::mt19937 &rng) const
@@ -72,21 +76,26 @@ namespace BTP
             assert(false && "random number selected out of bounds");
         }
 
-        virtual std::unique_ptr<State> sample(std::mt19937 &rng) const
+        virtual std::unique_ptr<State> sample(std::mt19937 &rng) const override
         {
             return sampleObstacleState(rng);
         }
 
-        virtual std::vector<WeightedState> getWeightedStates() const
+        virtual std::vector<WeightedState> getWeightedStates() const override
         {
             std::vector<WeightedState> ws;
             for(int i=0; i<o.size(); i++)
             {
-                ws.push_back(std::make_pair(std::static_pointer_cast<State>(
-                                                std::make_shared<ObstacleState>(&graph, cur, o[i])),
+                ws.push_back(std::make_pair(std::make_shared<ObstacleState>(&graph, cur, o[i]),
                                             weights[i]));
             }
             return ws;
+        }
+
+        virtual double getProbability(Observation obs) const
+        {
+            throw std::logic_error("Not implemented exception");
+            return 0.0;
         }
 
         void markInvalidEnvironments(Observation obs)
@@ -112,16 +121,6 @@ namespace BTP
             }
         }
 
-        void setLocation(Location loc)
-        {
-            cur = loc;
-        }
-
-        Location getLocation() const
-        {
-            return cur;
-        }
-        
         virtual void update(Observation obs)
         {
             using namespace arc_dijkstras;

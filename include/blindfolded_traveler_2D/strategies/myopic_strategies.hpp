@@ -46,11 +46,11 @@ namespace BTP
     class OptimisticWithPrior : public Strategy
     {
     public:
-        ObstacleBelief bel;
+        std::unique_ptr<Belief> bel;
         int num_samples;
     public:
-        OptimisticWithPrior(GraphD graph, Location goal, ObstacleBelief bel):
-            Strategy(graph, goal), bel(bel), num_samples(100)
+        OptimisticWithPrior(GraphD graph, Location goal, const Belief &bel):
+            Strategy(graph, goal), bel(bel.clone()), num_samples(100)
         {
             name = "OptimisticWithPrior";
         }
@@ -61,7 +61,7 @@ namespace BTP
 
         void viz(GraphVisualizer &viz) const override
         {
-            bel.viz(viz);
+            bel->viz(viz);
         }
 
     };
@@ -70,11 +70,11 @@ namespace BTP
     class BestExpectedStrategy : public Strategy
     {
     public:
-        ObstacleBelief bel;
+        std::unique_ptr<ExplicitBelief> bel;
 
     public:
-        BestExpectedStrategy(GraphD graph, Location goal, ObstacleBelief bel) :
-            Strategy(graph, goal), bel(bel)
+        BestExpectedStrategy(GraphD graph, Location goal, const ExplicitBelief &bel) :
+            Strategy(graph, goal), bel(bel.cloneExplicit())
         {
             name = "Best in expectation";
         }
@@ -85,7 +85,7 @@ namespace BTP
 
         void viz(GraphVisualizer &viz) const override
         {
-            bel.viz(viz);
+            bel->viz(viz);
         }
     };
 }

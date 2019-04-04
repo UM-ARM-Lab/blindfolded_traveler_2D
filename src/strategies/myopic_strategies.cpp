@@ -77,7 +77,7 @@ void OptimisticWithPrior::updateEdges()
 
     for(int i=0; i<num_samples; i++)
     {
-        sampled_states.push_back(bel.sample(rng));
+        sampled_states.push_back(bel->sample(rng));
     }
     
     for(auto &n: graph.getNodes())
@@ -111,7 +111,7 @@ Action OptimisticWithPrior::getNextAction(Location current, Observations obs)
 {
     if(obs.size() > 0)
     {
-        bel.update(obs.back());
+        bel->update(obs.back());
         updateEdges();
     }
 
@@ -163,9 +163,8 @@ Action BestExpectedStrategy::getNextAction(Location current, Observations obs)
 {
     if(obs.size() > 0)
     {
-        bel.update(obs.back());
+        bel->update(obs.back());
     }
-    bel.setLocation(current);
 
     if(current == goal)
     {
@@ -174,7 +173,7 @@ Action BestExpectedStrategy::getNextAction(Location current, Observations obs)
 
     std::map<Action, double> actions;
     using pair_type = decltype(actions)::value_type;
-    for(WeightedState &ws: bel.getWeightedStates())
+    for(WeightedState &ws: bel->getWeightedStates())
     {
         if(ws.second == 0)
         {
