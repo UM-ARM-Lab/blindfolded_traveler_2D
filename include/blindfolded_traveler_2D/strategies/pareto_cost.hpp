@@ -16,7 +16,8 @@ namespace BTP
         ParetoCost(GraphD graph, Location goal, const Belief &bel, double col_weight) :
             Strategy(graph, goal), bel(bel.clone()), collision_probability_weight(col_weight)
         {
-            name = "ParetoCost";
+            name = "ParetoCost_w=" + std::to_string(col_weight);
+            PROFILE_RECORD_DOUBLE("collision_probability_weight", collision_probability_weight);
         }
 
         virtual Action getNextAction(Location current, Observations obs) override

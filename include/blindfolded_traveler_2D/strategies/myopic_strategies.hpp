@@ -67,16 +67,16 @@ namespace BTP
     };
 
     
-    class BestExpectedStrategy : public Strategy
+    class AverageOverClairvoyance : public Strategy
     {
     public:
-        std::unique_ptr<ExplicitBelief> bel;
-
+        std::unique_ptr<Belief> bel;
+        int num_samples;
     public:
-        BestExpectedStrategy(GraphD graph, Location goal, const ExplicitBelief &bel) :
-            Strategy(graph, goal), bel(bel.cloneExplicit())
+        AverageOverClairvoyance(GraphD graph, Location goal, const Belief &bel) :
+            Strategy(graph, goal), bel(bel.clone()), num_samples(100)
         {
-            name = "Best in expectation";
+            name = "Averaging_over_clairvoyance";
         }
 
         Action planPathInEnv(const State &s);

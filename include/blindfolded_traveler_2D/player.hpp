@@ -10,7 +10,7 @@
 namespace BTP
 {
     template <typename T>
-    std::string Str(const T &t)
+    inline std::string Str(const T &t)
     {
         std::ostringstream os;
         os << t;

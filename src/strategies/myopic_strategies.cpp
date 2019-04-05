@@ -128,9 +128,9 @@ Action OptimisticWithPrior::getNextAction(Location current, Observations obs)
 
 
 /******************************
- **   BestExpectedStrategy
+ **   AverageOverClairvoyance
  ******************************/
-Action BestExpectedStrategy::planPathInEnv(const State &s)
+Action AverageOverClairvoyance::planPathInEnv(const State &s)
 {
     using namespace arc_dijkstras;
 
@@ -159,7 +159,7 @@ Action BestExpectedStrategy::planPathInEnv(const State &s)
 }
 
 
-Action BestExpectedStrategy::getNextAction(Location current, Observations obs)
+Action AverageOverClairvoyance::getNextAction(Location current, Observations obs)
 {
     if(obs.size() > 0)
     {
@@ -173,20 +173,19 @@ Action BestExpectedStrategy::getNextAction(Location current, Observations obs)
 
     std::map<Action, double> actions;
     using pair_type = decltype(actions)::value_type;
-    for(WeightedState &ws: bel->getWeightedStates())
+
+    std::mt19937 rng;
+    rng.seed(time(0));
+
+    for(int i=0; i<num_samples; i++)
     {
-        if(ws.second == 0)
-        {
-            continue;
-        }
-                
-        Action a = planPathInEnv(*ws.first);
+        Action a = planPathInEnv(*bel->sample(rng));
 
         if(actions.count(a) == 0)
         {
             actions[a] = 0;
         }
-        actions[a] += ws.second;
+        actions[a] += 1.0;
     }
 
     auto pr = std::max_element(actions.begin(), actions.end(),

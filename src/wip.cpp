@@ -31,7 +31,7 @@ int main(int argc, char **argv)
     // OmniscientStrategy strat(true_state, 24);
 
     ManyPossibleWallsScenario scenario(rng);
-    // BestExpectedStrategy strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    // AverageOverClairvoyance strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
     // OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, scenario.bel);

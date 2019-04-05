@@ -1,6 +1,7 @@
 #include "scenarios/predefined.hpp"
 #include "strategies/myopic_strategies.hpp"
 #include "strategies/optimistic_rollout.hpp"
+#include "strategies/pareto_cost.hpp"
 #include "scenarios/obstacle_scenario.hpp"
 #include "player.hpp"
 #include "ros/ros.h"
@@ -44,7 +45,7 @@ void test(Scenario &scenario, Strategy &strategy)
     ros::NodeHandle n;
     Player player(n);
     ros::Duration(1).sleep(); //Sleep to allow publishers to connect
-    player.run(scenario, strategy, 0.2);
+    player.run(scenario, strategy, 0.5);
 
     std::string filename = scenario.getName() + "_" + strategy.getName() + "_" +
         arc_helpers::GetCurrentTimeAsString();
@@ -72,7 +73,7 @@ void test3()
 {
     rng.seed(seed);
     ManyPossibleWallsScenario scenario(rng);
-    BestExpectedStrategy strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    AverageOverClairvoyance strat(scenario.getGraph(), scenario.goal, scenario.bel);
     test(scenario, strat);
 }
 
@@ -92,6 +93,18 @@ void test5()
     test(scenario, strat);
 }
 
+void test6()
+{
+    const std::vector<double> p_weights{0.0, 0.01, 0.1, 1.0, 10.0, 100};
+    for(const auto w: p_weights)
+    {
+        rng.seed(seed);
+        ManyPossibleWallsScenario scenario(rng);
+        ParetoCost strat(scenario.getGraph(), scenario.goal, scenario.bel, w);
+        test(scenario, strat);
+    }
+}
+
 
 
 
@@ -103,6 +116,7 @@ void testAll()
     test3();
     test4();
     test5();
+    test6();
 }
 
 
