@@ -14,7 +14,7 @@ namespace BTP
     {
     public:
         virtual std::unique_ptr<State> sample(std::mt19937 &rng) const = 0;
-        virtual double getProbability(Observation obs) const = 0;
+        virtual double getLikelihood(Observation obs) const = 0;
         virtual std::unique_ptr<Belief> clone() const = 0;
         virtual void update(Observation obs) = 0;
         virtual void viz(GraphVisualizer &viz) const = 0;

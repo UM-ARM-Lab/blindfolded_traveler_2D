@@ -92,10 +92,18 @@ namespace BTP
             return ws;
         }
 
-        virtual double getProbability(Observation obs) const
+        virtual double getLikelihood(Observation obs) const
         {
-            throw std::logic_error("Not implemented exception");
-            return 0.0;
+            double agreement = 0;
+            for(const auto& ws: getWeightedStates())
+            {
+                if(ws.first->getBlockage(obs.from, obs.to) == obs.blockage)
+                {
+                    agreement += ws.second;
+                }
+            }
+            
+            return agreement / sum;
         }
 
         void markInvalidEnvironments(Observation obs)
