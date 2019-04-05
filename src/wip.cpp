@@ -1,6 +1,7 @@
 #include "scenarios/predefined.hpp"
 #include "strategies/myopic_strategies.hpp"
 #include "strategies/optimistic_rollout.hpp"
+#include "strategies/pareto_cost.hpp"
 #include "scenarios/obstacle_scenario.hpp"
 #include "player.hpp"
 #include "ros/ros.h"
@@ -33,7 +34,8 @@ int main(int argc, char **argv)
     // BestExpectedStrategy strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
     // OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
-    OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    // OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    ParetoCost strat(scenario.getGraph(), scenario.goal, scenario.bel, 1.0);
     
 
     Player player(n);
