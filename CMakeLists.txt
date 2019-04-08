@@ -238,7 +238,12 @@ if(CATKIN_ENABLE_TESTING)
     ${catkin_LIBRARIES}
     # ${GTEST_LIBRARIES}
     BTP_2D
-  )
+    )
+  
+  catkin_add_gtest(test_chs
+    tests/test_chs.cpp)
+  target_link_libraries(test_chs ${catkin_LIBRARIES})
+
 
 endif()
 

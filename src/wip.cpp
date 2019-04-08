@@ -3,6 +3,7 @@
 #include "strategies/optimistic_rollout.hpp"
 #include "strategies/pareto_cost.hpp"
 #include "scenarios/obstacle_scenario.hpp"
+#include "beliefs/chs.hpp"
 #include "player.hpp"
 #include "ros/ros.h"
 
