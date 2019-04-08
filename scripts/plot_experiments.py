@@ -24,7 +24,7 @@ class Experiment:
     scenario = None
     strategy = None
     exec_cost = None
-    pareto_cost = None
+    pareto_weight = None
 
 
 def get_scenarios(experiments):
@@ -43,23 +43,14 @@ def plot_scenario(experiments):
 
     experiments.sort(key=lambda e:e.strategy)
 
-    
-    # fig, ax = plt.subplots()
-
     series = pd.Series([e.exec_cost for e in experiments])
     ax = series.plot(kind='bar')
     
     ax.set_title(experiments[0].scenario)
     
     x_labels = [e.strategy for e in experiments]
-    # y = 
-    x = range(1, len(experiments) + 1)
-    # plt.bar(x, y)
-
     ax.set_xticklabels(x_labels)
-
     plt.tight_layout()
-    
     plt.show()
 
 

@@ -129,7 +129,7 @@ namespace BTP
             }
         }
 
-        virtual void update(Observation obs)
+        virtual void update(Observation obs) override
         {
             using namespace arc_dijkstras;
             GraphEdge& e = graph.getEdge(obs.from, obs.to);
@@ -143,7 +143,7 @@ namespace BTP
         }
 
 
-        void viz(GraphVisualizer &viz) const
+        void viz(GraphVisualizer &viz) const override
         {
             Obstacles2D::Obstacles full_belief;
             for(int i=0; i<o.size(); i++)
