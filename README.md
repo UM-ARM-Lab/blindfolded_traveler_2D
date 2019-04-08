@@ -22,6 +22,9 @@ As an overview, this depends on:
 2. In a new terminal run `rosrun blind_traveler_2D wip`
 4. Watch the rviz graph and agent update
 
+
+For running all trials, `cd blindfolded_traaveler_2D/experiments` and `rosrun blind_traveler_2D run_trials`
+
 ## Overview
 
 The Blindfolded Traveler's Problem is where traveler on a graph is attempting to reach a goal node, however the traveler does not learn the validity of an edge until attempted. 
