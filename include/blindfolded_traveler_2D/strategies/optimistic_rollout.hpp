@@ -16,7 +16,7 @@ namespace BTP
         OptimisticRollout(GraphD graph, Location goal, const Belief &bel) :
             Strategy(graph, goal), bel(bel.clone()), num_rollouts(100)
         {
-            name = "Optimistic Rollout";
+            name = "Optimistic_Rollout";
         }
 
 

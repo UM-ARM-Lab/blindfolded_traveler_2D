@@ -53,7 +53,8 @@ namespace BTP
             displayTitles(scenario, strat);
             std::cout << "Agent starting at " << scenario.getLocation() << " with goal " << strat.goal << "\n";
 
-
+            PROFILE_RECORD_DOUBLE("Strategy: " + strat.getName(), 0);
+            PROFILE_RECORD_DOUBLE("Scenario: " + scenario.getName(), 0);
 
             while(!scenario.completed())
             {

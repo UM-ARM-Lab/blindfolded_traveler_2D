@@ -29,7 +29,7 @@ namespace BTP
             ObstacleScenario(Grid(5), 0, 24),
             bel(getGraph(), getLocation())
         {
-            name = "Wall Distribution";
+            name = "Wall_Distribution";
                 
             generateDistribution(rng);
             true_state = *bel.sampleObstacleState(rng);
