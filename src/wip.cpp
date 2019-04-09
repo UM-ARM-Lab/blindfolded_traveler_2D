@@ -17,6 +17,9 @@ int main(int argc, char **argv)
     std::mt19937 rng;
     rng.seed(time(0));
 
+    GraphVisualizer viz(n);
+    ros::Duration(1).sleep();
+
 
     // IndependentBlockageGridScenario scenario(5);
     // WallObstacleScenario scenario;
@@ -36,7 +39,12 @@ int main(int argc, char **argv)
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
     // OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, scenario.bel);
-    ParetoCost strat(scenario.getGraph(), scenario.goal, scenario.bel, 1.0);
+    // ParetoCost strat(scenario.getGraph(), scenario.goal, scenario.bel, 1.0);
+
+
+    
+    ChsBelief chsb = ChsBelief(scenario.getGraph(), scenario.getLocation(), 0.01, 0.1);
+    ParetoCost strat(scenario.getGraph(), scenario.goal, chsb, 1.0);
     
 
     Player player(n);
@@ -46,6 +54,5 @@ int main(int argc, char **argv)
     player.run(scenario, strat, 0.2);
 
 
-    // viz.vizGraph(scenario.getGraph(), "Grid Graph with Independent Blockage");
     ros::Duration(1).sleep(); //sleep to allow final messages to reach RViz
 }

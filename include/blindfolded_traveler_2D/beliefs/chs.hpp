@@ -24,7 +24,7 @@ namespace BTP
             SetValue(x, y, 0.0, occ);
         }
 
-        bool get(double x, double y)
+        bool get(double x, double y) const
         {
             return GetImmutable(x, y, 0.0).first;
         }
@@ -46,7 +46,7 @@ namespace BTP
             }
         }
 
-        double intersectFraction(const VoxelGrid2D& other)
+        double intersectFraction(const VoxelGrid2D& other) const
         {
             int overlap = 0;
             int total = 0;
@@ -167,10 +167,9 @@ namespace BTP
 
         }
 
-        double getLikelihood(Observation obs) const
+        double getLikelihood(const VoxelGrid2D& sv) const
         {
-            throw std::logic_error("Not implemented");
-            return 1.0; //TODO: return likelihood based on CHS
+            return 1.0 - intersectFraction(sv);
         }
     };
 
@@ -180,17 +179,22 @@ namespace BTP
         GraphD graph;
         Location cur;
         std::vector<Chs> chss;
+        double resolution;
+        VoxelGrid2D free_space;
+        double robot_width;
 
     public:
-        ChsBelief(GraphD graph, Location cur) :
-            graph(graph), cur(cur)
+        ChsBelief(GraphD graph, Location cur, double resolution, double robot_width) :
+            graph(graph), cur(cur), resolution(resolution), free_space(resolution),
+            robot_width(robot_width)
         {
         }
 
         virtual std::unique_ptr<Belief> clone() const override
         {
-            std::unique_ptr<ChsBelief> b = std::make_unique<ChsBelief>(graph, cur);
+            std::unique_ptr<ChsBelief> b = std::make_unique<ChsBelief>(graph, cur, resolution, robot_width);
             b->chss = chss;
+            b->free_space = free_space;
             return b;
         }
 
@@ -207,28 +211,60 @@ namespace BTP
 
         virtual double getLikelihood(Observation obs) const
         {
+            VoxelGrid2D sv(resolution);
+            addFreeSpace(sv, obs);
+            
             double p = 1.0;
             for(const auto& chs: chss)
             {
-                p *= chs.getLikelihood(obs);
+                p *= chs.getLikelihood(sv);
             }
             return p;
         }
 
+        void addRobot(VoxelGrid2D& grid, std::vector<double> q) const
+        {
+            for(double x = q[0] - robot_width/2; x < q[0] + robot_width/2; x += resolution)
+            {
+                for(double y = q[1] - robot_width/2; y < q[1] + robot_width/2; y += resolution)
+                {
+                    grid.set(x, y, true);
+                }
+            }
+        }
+
+        void addFreeSpace(VoxelGrid2D& grid, Observation obs) const
+        {
+            auto from = graph.getNode(obs.from).getValue();
+            auto to = graph.getNode(obs.to).getValue();
+
+            for(double ratio = 0; ratio<obs.blockage; ratio += 0.1)
+            {
+                addRobot(grid, EigenHelpers::Interpolate(from, to, ratio));
+            }
+        }
+
         void addChs(Observation obs)
         {
-            throw std::logic_error("Not implemented");
-            //Todo make chs based on observation;
-            // Obstacles2D::Obstacles o;
-            // o.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.5, 0.5, 0.7, 0.7));
-            // chss.push_back(Chs(o));
+            Chs chs(resolution);
+            auto from = graph.getNode(obs.from).getValue();
+            auto to = graph.getNode(obs.to).getValue();
+
+            addRobot(chs, EigenHelpers::Interpolate(from, to, obs.blockage + 0.1));
+            chss.push_back(chs);
         }
 
         virtual void update(Observation obs)
         {
+            addFreeSpace(free_space, obs);
             if(!obs.succeeded())
             {
                 addChs(obs);
+            }
+
+            for(auto& chs: chss)
+            {
+                chs.subtract(free_space);
             }
         }
 
@@ -242,6 +278,15 @@ namespace BTP
                 ma.markers.push_back(m);
             }
             viz.obs_pub.publish(ma);
+
+            std_msgs::ColorRGBA free_color;
+            free_color.a = 0.3;
+            free_color.b = 0.8;
+            visualization_msgs::Marker free = free_space.toVisualizationMsg(free_color);
+            free.ns = "Known free";
+            visualization_msgs::MarkerArray free_arr;
+            free_arr.markers.push_back(free);
+            viz.obs_pub.publish(free_arr);
         }
     };
 }
