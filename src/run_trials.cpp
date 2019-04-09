@@ -10,6 +10,10 @@
 
 using namespace BTP;
 
+typedef std::function<std::shared_ptr<Scenario>(std::mt19937&)> ScenarioFactory;
+// typedef std::function<std::shared_ptr<Strategy>(void)> StrategyFactory;
+
+
 // std::vector<std::function<std::shared_ptr<Scenario>(void)>> getScenarioFactories()
 // {
 //     std::vector<std::function<std::shared_ptr<Scenario>(void)>> factories;
@@ -25,8 +29,6 @@ using namespace BTP;
 // }
 
 
-// typedef std::function<std::shared_ptr<Scenario>(void)> ScenarioFactory;
-// typedef std::function<std::shared_ptr<Strategy>(void)> StrategyFactory;
 
 
 // std::vector<std::pair<ScenarioFactory, StrategyFactory>> getTestCases()
@@ -54,85 +56,98 @@ void test(Scenario &scenario, Strategy &strategy)
 }
 
 
-void test1()
+void test1(ScenarioFactory fac)
 {
     rng.seed(seed);
-    ManyPossibleWallsScenario scenario(rng);
-    OmniscientStrategy strat(scenario.true_state, scenario.goal);
-    test(scenario, strat);
+    // ManyPossibleWallsScenario scenario(rng);
+    auto scenario_ptr = fac(rng);
+    OmniscientStrategy strat(scenario_ptr->getState(), scenario_ptr->goal);
+    test(*scenario_ptr, strat);
 }
 
-void test2()
+void test2(ScenarioFactory fac)
 {
     rng.seed(seed);
-    ManyPossibleWallsScenario scenario(rng);
-    OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
-    test(scenario, strat);
+    auto scenario_ptr = fac(rng);
+    OptimisticStrategy strat(scenario_ptr->getGraph(), scenario_ptr->goal);
+    test(*scenario_ptr, strat);
 }
 
-void test3()
+void test3(ScenarioFactory fac)
 {
     rng.seed(seed);
-    ManyPossibleWallsScenario scenario(rng);
-    AverageOverClairvoyance strat(scenario.getGraph(), scenario.goal, scenario.bel);
-    test(scenario, strat);
+    auto scenario_ptr = fac(rng);
+    AverageOverClairvoyance strat(scenario_ptr->getGraph(), scenario_ptr->goal, scenario_ptr->getPrior());
+    test(*scenario_ptr, strat);
 }
 
-void test4()
+void test4(ScenarioFactory fac)
 {
     rng.seed(seed);
-    ManyPossibleWallsScenario scenario(rng);
-    OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
-    test(scenario, strat);
+    auto scenario_ptr = fac(rng);
+    OptimisticRollout strat(scenario_ptr->getGraph(), scenario_ptr->goal, scenario_ptr->getPrior());
+    test(*scenario_ptr, strat);
 }
 
-void test5()
+void test5(ScenarioFactory fac)
 {
     rng.seed(seed);
-    ManyPossibleWallsScenario scenario(rng);
-    OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, scenario.bel);
-    test(scenario, strat);
+    auto scenario_ptr = fac(rng);
+    OptimisticWithPrior strat(scenario_ptr->getGraph(), scenario_ptr->goal, scenario_ptr->getPrior());
+    test(*scenario_ptr, strat);
 }
 
-void test6()
+void test6(ScenarioFactory fac)
 {
     //Pareto Cost with bayesian belief
     const std::vector<double> p_weights{0.01, 0.1, 1.0, 10.0, 100};
     for(const auto w: p_weights)
     {
         rng.seed(seed);
-        ManyPossibleWallsScenario scenario(rng);
-        ParetoCost strat(scenario.getGraph(), scenario.goal, scenario.bel, w);
-        test(scenario, strat);
+        auto scenario_ptr = fac(rng);
+        ParetoCost strat(scenario_ptr->getGraph(), scenario_ptr->goal, scenario_ptr->getPrior(), w);
+        test(*scenario_ptr, strat);
     }
 }
 
-void test7()
+void test7(ScenarioFactory fac)
 {
+    //Pareto Cost with CHS belief
     const std::vector<double> p_weights{0.01, 0.1, 1.0, 10.0, 100};
     for(const auto w: p_weights)
     {
         rng.seed(seed);
-        ManyPossibleWallsScenario scenario(rng);
-        ChsBelief chsb = ChsBelief(scenario.getGraph(), scenario.getLocation(), 0.01, 0.1);
-        ParetoCost strat(scenario.getGraph(), scenario.goal, chsb, w);
-        test(scenario, strat);
+        auto scenario_ptr = fac(rng);
+        ChsBelief chsb = ChsBelief(scenario_ptr->getGraph(), scenario_ptr->getLocation(), 0.01, 0.1);
+        ParetoCost strat(scenario_ptr->getGraph(), scenario_ptr->goal, chsb, w);
+        test(*scenario_ptr, strat);
     }
 }
 
 
+std::vector<ScenarioFactory> getAllScenarios()
+{
+    std::vector<ScenarioFactory> f;
+    f.push_back([](std::mt19937& rng) { return std::make_shared<ManyPossibleWallsScenario>(rng);});
+    return f;
+}
 
 
 void testAll()
 {
     seed = time(0);
-    test1();
-    test2();
-    test3();
-    test4();
-    test5();
-    test6();
-    test7();
+
+    for(auto scenario_factory: getAllScenarios())
+    {
+        test1(scenario_factory);
+        test2(scenario_factory);
+        test3(scenario_factory);
+        test4(scenario_factory);
+        test5(scenario_factory);
+        test6(scenario_factory);
+        test7(scenario_factory);
+    }
+
 }
 
 

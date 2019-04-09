@@ -35,6 +35,14 @@ namespace BTP
             true_state = *bel.sampleObstacleState(rng);
         }
 
+        virtual const Belief& getPrior() const override
+        {
+            return bel;
+        }
+        
+
+            
+
     private:
         void generateDistribution(std::mt19937 &rng)
         {

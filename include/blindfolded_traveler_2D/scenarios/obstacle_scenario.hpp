@@ -46,7 +46,7 @@ namespace BTP
     public:
         ObstacleState true_state;
 
-        virtual State& getState()
+        virtual State& getState() override
         {
             return true_state;
         }

@@ -3,6 +3,7 @@
 #include "states/state.hpp"
 #include "observations.hpp"
 #include "graph_planner/graph_visualization.hpp"
+#include "beliefs/belief.hpp"
 
 namespace BTP
 {
@@ -54,6 +55,8 @@ namespace BTP
         {
             return graph;
         }
+
+        virtual const Belief& getPrior() const = 0;
 
         virtual const Location& getLocation() const = 0;
 
