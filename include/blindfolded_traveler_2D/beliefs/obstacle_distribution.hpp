@@ -163,6 +163,11 @@ namespace BTP
             color.a = std::max(1.0/sum, 1.0/255);
             viz.vizObstacles(full_belief, 0.01, "Belief", color);
         }
+
+        virtual std::string getName() const override
+        {
+            return "ObstaclePrior";
+        }
     };
 }
 

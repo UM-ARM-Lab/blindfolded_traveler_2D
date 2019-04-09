@@ -40,6 +40,12 @@ namespace BTP
             bel->viz(viz);
         }
 
+        virtual std::string getName() const override
+        {
+            return name + "_" + bel->getName();
+        }
+
+
     protected:
         Action getParetoAction(Location current)
         {

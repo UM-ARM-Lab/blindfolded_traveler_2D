@@ -18,6 +18,7 @@ namespace BTP
         virtual std::unique_ptr<Belief> clone() const = 0;
         virtual void update(Observation obs) = 0;
         virtual void viz(GraphVisualizer &viz) const = 0;
+        virtual std::string getName() const = 0;
     };
     
     

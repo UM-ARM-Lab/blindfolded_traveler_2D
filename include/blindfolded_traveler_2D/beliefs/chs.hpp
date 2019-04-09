@@ -288,6 +288,12 @@ namespace BTP
             free_arr.markers.push_back(free);
             viz.obs_pub.publish(free_arr);
         }
+
+        virtual std::string getName() const override
+        {
+            return "CHS";
+        }
+        
     };
 }
 #endif
