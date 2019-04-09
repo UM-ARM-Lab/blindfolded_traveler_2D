@@ -3,6 +3,7 @@
 #include "strategies/optimistic_rollout.hpp"
 #include "strategies/pareto_cost.hpp"
 #include "scenarios/obstacle_scenario.hpp"
+#include "beliefs/chs.hpp"
 #include "player.hpp"
 #include "ros/ros.h"
 #include "arc_utilities/timing.hpp"
@@ -95,12 +96,26 @@ void test5()
 
 void test6()
 {
-    const std::vector<double> p_weights{0.0, 0.01, 0.1, 1.0, 10.0, 100};
+    //Pareto Cost with bayesian belief
+    const std::vector<double> p_weights{0.01, 0.1, 1.0, 10.0, 100};
     for(const auto w: p_weights)
     {
         rng.seed(seed);
         ManyPossibleWallsScenario scenario(rng);
         ParetoCost strat(scenario.getGraph(), scenario.goal, scenario.bel, w);
+        test(scenario, strat);
+    }
+}
+
+void test7()
+{
+    const std::vector<double> p_weights{0.01, 0.1, 1.0, 10.0, 100};
+    for(const auto w: p_weights)
+    {
+        rng.seed(seed);
+        ManyPossibleWallsScenario scenario(rng);
+        ChsBelief chsb = ChsBelief(scenario.getGraph(), scenario.getLocation(), 0.01, 0.1);
+        ParetoCost strat(scenario.getGraph(), scenario.goal, chsb, w);
         test(scenario, strat);
     }
 }
@@ -117,6 +132,7 @@ void testAll()
     test4();
     test5();
     test6();
+    test7();
 }
 
 
