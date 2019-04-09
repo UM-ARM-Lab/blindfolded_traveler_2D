@@ -11,26 +11,32 @@ namespace BTP
     class WallObstacleScenario : public ObstacleScenario
     {
     public:
+        ObstacleBelief bel;
         WallObstacleScenario() :
-            ObstacleScenario(Grid(5), 0, 24)
+            ObstacleScenario(Grid(5), 0, 24),
+            bel(getGraph(), getLocation())
         {
             name = "Wall Scenario";
             true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.4, -0.1, 0.6, 0.95));
+            bel.addElem(true_state.obstacles, 1.0);
         }
 
+        virtual const Belief& getPrior() const override
+        {
+            return bel;
+        }
     };
 
-    class ManyPossibleWallsScenario : public ObstacleScenario
+    class SingleWallScenario : public ObstacleScenario
     {
     public:
         ObstacleBelief bel;
         
-        ManyPossibleWallsScenario(std::mt19937& rng) :
-            ObstacleScenario(Grid(5), 0, 24),
+        SingleWallScenario(std::mt19937& rng, GraphD graph, int start, int goal) :
+            ObstacleScenario(graph, start, goal),
             bel(getGraph(), getLocation())
         {
             name = "Wall_Distribution";
-                
             generateDistribution(rng);
             true_state = *bel.sampleObstacleState(rng);
         }
@@ -39,9 +45,6 @@ namespace BTP
         {
             return bel;
         }
-        
-
-            
 
     private:
         void generateDistribution(std::mt19937 &rng)
@@ -56,6 +59,26 @@ namespace BTP
                                                                     0.6 + dx, 0.85 + dy));
                 bel.addElem(o, 1.0);
             }
+        }
+    };
+
+    class SparseSingleWallScenario : public SingleWallScenario
+    {
+    public:
+        SparseSingleWallScenario(std::mt19937& rng) :
+            SingleWallScenario(rng, Grid(5), 0, 24)
+        {
+            name = "Single_Wall_Sparse_Graph";
+        }
+    };
+
+    class DenseSingleWallScenario : public SingleWallScenario
+    {
+    public:
+        DenseSingleWallScenario(std::mt19937& rng) :
+            SingleWallScenario(rng, Grid(20), 0, 399)
+        {
+            name = "Single_Wall_Dense_Graph";
         }
     };
 }

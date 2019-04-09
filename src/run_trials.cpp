@@ -48,7 +48,7 @@ void test(Scenario &scenario, Strategy &strategy)
     ros::NodeHandle n;
     Player player(n);
     ros::Duration(1).sleep(); //Sleep to allow publishers to connect
-    player.run(scenario, strategy, 0.5);
+    player.run(scenario, strategy, 0.1);
 
     std::string filename = scenario.getName() + "_" + strategy.getName() + "_" +
         arc_helpers::GetCurrentTimeAsString();
@@ -59,7 +59,7 @@ void test(Scenario &scenario, Strategy &strategy)
 void test1(ScenarioFactory fac)
 {
     rng.seed(seed);
-    // ManyPossibleWallsScenario scenario(rng);
+    // SingleWallScenario scenario(rng);
     auto scenario_ptr = fac(rng);
     OmniscientStrategy strat(scenario_ptr->getState(), scenario_ptr->goal);
     test(*scenario_ptr, strat);
@@ -128,7 +128,8 @@ void test7(ScenarioFactory fac)
 std::vector<ScenarioFactory> getAllScenarios()
 {
     std::vector<ScenarioFactory> f;
-    f.push_back([](std::mt19937& rng) { return std::make_shared<ManyPossibleWallsScenario>(rng);});
+    f.push_back([](std::mt19937& rng) { return std::make_shared<SparseSingleWallScenario>(rng);});
+    f.push_back([](std::mt19937& rng) { return std::make_shared<DenseSingleWallScenario>(rng);});
     return f;
 }
 

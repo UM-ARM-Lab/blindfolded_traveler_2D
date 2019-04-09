@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 
     // IndependentBlockageGridScenario scenario(5);
     // WallObstacleScenario scenario;
-    // ManyPossibleWallsScenario scenario;
+    // SparsexSingleWallScenario scenario;
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
 
     
@@ -34,8 +34,8 @@ int main(int argc, char **argv)
     // ObstacleScenario scenario(true_state, 24);
     // OmniscientStrategy strat(true_state, 24);
 
-    ManyPossibleWallsScenario scenario(rng);
-    // AverageOverClairvoyance strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    DenseSingleWallScenario scenario(rng);
+    AverageOverClairvoyance strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
     // OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, scenario.bel);
@@ -43,8 +43,8 @@ int main(int argc, char **argv)
 
 
     
-    ChsBelief chsb = ChsBelief(scenario.getGraph(), scenario.getLocation(), 0.01, 0.1);
-    ParetoCost strat(scenario.getGraph(), scenario.goal, chsb, 1.0);
+    // ChsBelief chsb = ChsBelief(scenario.getGraph(), scenario.getLocation(), 0.01, 0.1);
+    // ParetoCost strat(scenario.getGraph(), scenario.goal, chsb, 1.0);
     
 
     Player player(n);

@@ -31,7 +31,7 @@ TEST(basic_behavior, optimistic_random_wall)
 {
     ros::NodeHandle n;
     std::mt19937 rng;
-    ManyPossibleWallsScenario scenario(rng);
+    SparseSingleWallScenario scenario(rng);
     OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
     Player player(n);
     player.run(scenario, strat);
