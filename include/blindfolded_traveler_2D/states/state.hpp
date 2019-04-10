@@ -26,6 +26,7 @@ namespace BTP
 
         /*
          *  Returns the fraction (0.0 to 1.0) of the edge traversed before a collision was encountered
+         *   
          */
         virtual double getBlockage(Location l, Action a) const = 0;
 

@@ -154,6 +154,11 @@ Action AverageOverClairvoyance::planPathInEnv(const State &s)
         edge_validity_check_fn,
         distance_fn, 
         &distanceHeuristic, true);
+
+    if(result.first.size() < 2 || result.second >= std::numeric_limits<double>::max())
+    {
+        throw std::out_of_range("No Path Found");
+    }
             
     return result.first[1];
 }

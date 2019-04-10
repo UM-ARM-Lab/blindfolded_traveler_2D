@@ -4,6 +4,7 @@
 #include "strategies/pareto_cost.hpp"
 #include "scenarios/obstacle_scenario.hpp"
 #include "scenarios/trap.hpp"
+#include "scenarios/many_boxes.hpp"
 #include "beliefs/chs.hpp"
 #include "player.hpp"
 #include "ros/ros.h"
@@ -35,7 +36,8 @@ int main(int argc, char **argv)
     // ObstacleScenario scenario(true_state, 24);
     // OmniscientStrategy strat(true_state, 24);
 
-    DenseTrapScenario scenario(rng);
+    // DenseTrapScenario scenario(rng);
+    DenseManyBoxesScenario scenario(rng);
     AverageOverClairvoyance strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
     // OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
