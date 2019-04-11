@@ -1,13 +1,11 @@
 #ifndef BTP_STATE_HPP
 #define BTP_STATE_HPP
+#include "btp_defines.hpp"
 #include "graph_planner/halton_graph.hpp"
 #include "graph_planner/2d_obstacles.hpp"
 
 namespace BTP
 {
-    typedef int64_t Location;
-    typedef int64_t Action;
-
     /**
      *   Abstract State class
      */

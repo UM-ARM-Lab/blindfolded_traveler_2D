@@ -1,6 +1,7 @@
 #ifndef BTP_OBSERVATIONS_HPP
 #define BTP_OBSERVATIONS_HPP
 #include <vector>
+#include "btp_defines.hpp"
 
 namespace BTP
 {
