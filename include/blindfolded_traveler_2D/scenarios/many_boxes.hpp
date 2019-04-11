@@ -69,8 +69,8 @@ namespace BTP
             int i=0;
             while(i < 1000)
             {
-                int num_boxes = std::uniform_int_distribution<int>(0, 5)(rng);
-                
+                // int num_boxes = std::uniform_int_distribution<int>(0, 5)(rng);
+                int num_boxes = 10;
                 Obstacles2D::Obstacles o;
                 for(int box_id=0; box_id<num_boxes; box_id++)
                 {
