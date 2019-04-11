@@ -169,6 +169,17 @@ namespace BTP
             return "ObstaclePrior";
         }
     };
+
+
+
+
+    class ProjectingObstacleBelief : public ObstacleBelief
+    {
+    public:
+        virtual void update(Observation obs) override
+        {
+        }
+    };
 }
 
 #endif

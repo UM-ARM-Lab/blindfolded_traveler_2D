@@ -243,6 +243,10 @@ if(CATKIN_ENABLE_TESTING)
   catkin_add_gtest(test_chs
     tests/test_chs.cpp)
   target_link_libraries(test_chs ${catkin_LIBRARIES})
+  
+  catkin_add_gtest(test_projection
+    tests/test_projection.cpp)
+  target_link_libraries(test_projection ${catkin_LIBRARIES})
 
 
 endif()
