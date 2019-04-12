@@ -19,19 +19,63 @@ TEST(ProjectionTest, getNearest_returns_nearest_obstacle)
     EXPECT_EQ(getNearest(obstacles, std::vector<double>{5, 4}), r2);
 }
 
-TEST(ProjectionTest, project_rectancle_satisfies_collsion)
+TEST(ProjectionTest, project_rectancle_onto_side_wall_yeilds_state_consistent_with_observation)
 {
     Obstacles obstacles;
     obstacles.obs.push_back(std::make_shared<Rect>(0.7, 0.2, 1.0, 0.8));
     Grid g(2);
-    Observation z(0, 3, 0.5);
-    
     ObstacleState s(&g, 0, obstacles);
 
-    EXPECT_NE(s.getBlockage(z.from, z.to), z.blockage) << "Blockage already matches in setup: Test invalid";
+    {
+        Observation z(0, 3, 0.5);
+        EXPECT_NE(s.getBlockage(z.from, z.to), z.blockage) << "Blockage already matches in setup: Test invalid";
+        makeConsistent(s, z);
+        EXPECT_EQ(s.getBlockage(z.from, z.to), z.blockage) << "Blockage does not match after makeConsistent";
+    }
+    {
+        Observation z(3, 0, 0.5);
+        EXPECT_NE(s.getBlockage(z.from, z.to), z.blockage) << "Blockage already matches in setup: Test invalid";
+        makeConsistent(s, z);
+        EXPECT_EQ(s.getBlockage(z.from, z.to), z.blockage) << "Blockage does not match after makeConsistent";
+    }
+}
 
-    makeConsistent(s, z);
-    EXPECT_EQ(s.getBlockage(z.from, z.to), z.blockage) << "Blockage does not match after makeConsistent";
+TEST(ProjectionTest, project_rectancle_onto_top_bottom_wall_yeilds_state_consistent_with_observation)
+{
+    Obstacles obstacles;
+    obstacles.obs.push_back(std::make_shared<Rect>(0.2, 0.7, 0.8, 1.0));
+    Grid g(2);
+    ObstacleState s(&g, 0, obstacles);
+
+    {
+        Observation z(0, 3, 0.5);
+        EXPECT_NE(s.getBlockage(z.from, z.to), z.blockage) << "Blockage already matches in setup: Test invalid";
+        makeConsistent(s, z);
+        EXPECT_EQ(s.getBlockage(z.from, z.to), z.blockage) << "Blockage does not match after makeConsistent";
+    }
+    {
+        Observation z(3, 0, 0.5);
+        EXPECT_NE(s.getBlockage(z.from, z.to), z.blockage) << "Blockage already matches in setup: Test invalid";
+        makeConsistent(s, z);
+        EXPECT_EQ(s.getBlockage(z.from, z.to), z.blockage) << "Blockage does not match after makeConsistent";
+    }
+}
+
+TEST(ProjectionTest, project_rectangle_onto_corner_yeilds_state_consistent_with_observation)
+{
+    Obstacles obstacles;
+    obstacles.obs.push_back(std::make_shared<Rect>(3, 3, 4, 4));
+    Grid g(2);
+    ObstacleState s(&g, 0, obstacles);
+    
+    {
+        Observation z(0, 3, 0.5);
+        EXPECT_NE(s.getBlockage(z.from, z.to), z.blockage) << "Blockage already matches in setup: Test invalid";
+        EXPECT_EQ(s.getBlockage(z.from, z.to), 1.0);
+        makeConsistent(s, z);
+        EXPECT_EQ(s.getBlockage(z.from, z.to), z.blockage) << "Blockage does not match after makeConsistent";
+    }
+    
 }
 
 

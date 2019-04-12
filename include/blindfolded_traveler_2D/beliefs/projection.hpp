@@ -26,6 +26,14 @@ namespace BTP
         return o.obs[smallest_index];
     }
 
+    inline void shift(Obstacles2D::Rect& r, double x, double y)
+    {
+        r.x1 += x;
+        r.x2 += x;
+        r.y1 += y;
+        r.y2 += y;
+    }
+
     inline void makeConsistent(ObstacleState& s, Observation obs)
     {
         using namespace Obstacles2D;
@@ -34,7 +42,8 @@ namespace BTP
         auto to = s.graph->getNode(obs.to).getValue();
         double eps = 0.000001;
         std::vector<double> collision_q = EigenHelpers::Interpolate(from, to, obs.blockage + eps);
-        
+        double cx = collision_q[0];
+        double cy = collision_q[1];
 
         Rect* r = dynamic_cast<Rect*>(getNearest(s.obstacles, collision_q).get());
 
@@ -46,16 +55,24 @@ namespace BTP
 
         // r->distance(
         // std::cout << "collision point is " << collision_q[0] << ", " << collision_q[1] << "\n";
-        
-        if(collision_q[1] > r->y1 && collision_q[1] < r->y2)
+
+        double shiftx = cx - (match_left_edge ? r->x1 : r->x2);
+        double shifty = cy - (match_bottom_edge ? r->y1 : r->y2);
+
+
+        if(r->y1 < cy && cy < r->y2)
         {
-            if(match_left_edge)
-            {
-                r->x2 += collision_q[0] - r->x1;
-                r->x1 = collision_q[0];
-                // std::cout<< "Adjusted rectangle to " << r->x1 << ", " << r->x2 << "\n";
-            }
+            shift(*r, shiftx, 0);
+            return;
         }
+        else if(r->x1 < cx && cx < r->x2)
+        {
+            shift(*r, 0, shifty);
+            return;
+        }
+
+
+        shift(*r, shiftx, shifty);
     }
 }
 
