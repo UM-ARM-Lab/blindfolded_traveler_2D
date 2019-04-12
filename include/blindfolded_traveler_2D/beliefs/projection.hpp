@@ -34,8 +34,15 @@ namespace BTP
         r.y2 += y;
     }
 
-    inline void makeConsistent(ObstacleState& s, Observation obs)
+    /*
+     *  Shifts obstacles around to make them consistent with the provided observation
+     *
+     *   NOTE!!! Currently only works to shift one obstacle to be consistent with a collision observation
+     *   This does not move obstacles out of the way of collision
+     */
+    inline void makeConsistentCollision(ObstacleState& s, Observation obs)
     {
+        
         using namespace Obstacles2D;
         
         auto from = s.graph->getNode(obs.from).getValue();
@@ -73,6 +80,38 @@ namespace BTP
 
 
         shift(*r, shiftx, shifty);
+    }
+
+    inline void makeConsistentFree(ObstacleState& s, Observation obs)
+    {
+        using namespace Obstacles2D;
+        for(auto obstacle: s.obstacles.obs)
+        {
+            Obstacles test_obstacle;
+            test_obstacle.obs.push_back(obstacle);
+                
+            if(!test_obstacle.isValid(s.graph->getEdge(obs.from, obs.to), *s.graph))
+            {
+                std::cout << "Moving obstacle to oblivion\n";
+                Rect* r = dynamic_cast<Rect*>(obstacle.get());
+                r->x1 = 1000;
+                r->x2 = 1001;
+                r->y1 = 1000;
+                r->y2 = 1001;
+            }
+        }
+    }
+
+    inline void makeConsistent(ObstacleState& s, Observation obs)
+    {
+        if(obs.succeeded())
+        {
+            makeConsistentFree(s, obs);
+        }
+        else
+        {
+            makeConsistentCollision(s, obs);
+        }
     }
 }
 

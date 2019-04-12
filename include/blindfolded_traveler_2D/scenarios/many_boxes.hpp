@@ -14,7 +14,7 @@ namespace BTP
     class ManyBoxesScenario : public ObstacleScenario
     {
     public:
-        ObstacleBelief bel;
+        ProjectingObstacleBelief bel;
         
         ManyBoxesScenario(std::mt19937& rng, GraphD graph, int start, int goal) :
             ObstacleScenario(graph, start, goal),
@@ -77,8 +77,8 @@ namespace BTP
                     std::uniform_real_distribution<double> rand_offset(0, 1.0);
                     double x = rand_offset(rng);
                     double y = rand_offset(rng);
-                    double w = rand_offset(rng)/3;
-                    double h = rand_offset(rng)/3;
+                    double w = rand_offset(rng)/3 + 0.1;
+                    double h = rand_offset(rng)/3 + 0.1;
                     o.obs.push_back(std::make_shared<Obstacles2D::Rect>(x, y, x+w, y+h));
                 }
 

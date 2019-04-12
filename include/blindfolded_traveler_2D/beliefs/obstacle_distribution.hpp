@@ -5,6 +5,7 @@
 #include "states/state.hpp"
 #include "observations.hpp"
 #include "beliefs/belief.hpp"
+#include "projection.hpp"
 #include <random>
 
 namespace BTP
@@ -27,7 +28,7 @@ namespace BTP
         GraphD graph;
         Location cur;
         
-        std::vector<Obstacles2D::Obstacles> o;
+        std::vector<Obstacles2D::Obstacles> obstacle_set;
         std::vector<double> weights;
         std::vector<double> cum_sum;
     protected:
@@ -46,7 +47,7 @@ namespace BTP
         virtual std::unique_ptr<ExplicitBelief> cloneExplicit() const override
         {
             std::unique_ptr<ObstacleBelief> b = std::make_unique<ObstacleBelief>(graph, cur);
-            b->o = o;
+            b->obstacle_set = obstacle_set;
             b->weights = weights;
             b->cum_sum = cum_sum;
             b->sum = sum;
@@ -55,7 +56,7 @@ namespace BTP
         
         void addElem(Obstacles2D::Obstacles obs, double weight)
         {
-            o.push_back(obs);
+            obstacle_set.push_back(obs);
             weights.push_back(weight);
             sum += weight;
             cum_sum.push_back(sum);
@@ -66,11 +67,11 @@ namespace BTP
             std::uniform_real_distribution<double> dist(0.0, sum);
             double r = dist(rng);
 
-            for(int i=0; i<o.size(); i++)
+            for(int i=0; i<obstacle_set.size(); i++)
             {
                 if(r <= cum_sum[i])
                 {
-                    return std::make_unique<ObstacleState>(&graph, cur, o[i]);
+                    return std::make_unique<ObstacleState>(&graph, cur, obstacle_set[i]);
                 }
             }
             assert(false && "random number selected out of bounds");
@@ -84,9 +85,9 @@ namespace BTP
         virtual std::vector<WeightedState> getWeightedStates() const override
         {
             std::vector<WeightedState> ws;
-            for(int i=0; i<o.size(); i++)
+            for(int i=0; i<obstacle_set.size(); i++)
             {
-                ws.push_back(std::make_pair(std::make_shared<ObstacleState>(&graph, cur, o[i]),
+                ws.push_back(std::make_pair(std::make_shared<ObstacleState>(&graph, cur, obstacle_set[i]),
                                             weights[i]));
             }
             return ws;
@@ -108,13 +109,13 @@ namespace BTP
 
         void markInvalidEnvironments(Observation obs)
         {
-            for(int i=0; i<o.size(); i++)
+            for(int i=0; i<obstacle_set.size(); i++)
             {
                 if(weights[i] == 0)
                 {
                     continue;
                 }
-                ObstacleState h(&graph, obs.from, o[i]);
+                ObstacleState h(&graph, obs.from, obstacle_set[i]);
                 if(!isConsistent(obs, h))
                 {
                     weights[i] = 0;
@@ -146,10 +147,10 @@ namespace BTP
         void viz(GraphVisualizer &viz) const override
         {
             Obstacles2D::Obstacles full_belief;
-            for(int i=0; i<o.size(); i++)
+            for(int i=0; i<obstacle_set.size(); i++)
             {
         
-                for(const auto& obstacle: o[i].obs)
+                for(const auto& obstacle: obstacle_set[i].obs)
                 {
                     if(weights[i] == 0)
                     {
@@ -176,9 +177,53 @@ namespace BTP
     class ProjectingObstacleBelief : public ObstacleBelief
     {
     public:
+        ProjectingObstacleBelief(GraphD graph, Location cur) :
+            ObstacleBelief(graph, cur)
+        {}
+
+        
         virtual void update(Observation obs) override
         {
+            std::cout << "projecting update\n";
+            for(int i=0; i<obstacle_set.size(); i++)
+            {
+                if(weights[i] == 0)
+                {
+                    continue;
+                }
+
+                ObstacleState os = ObstacleState(&graph, cur, obstacle_set[i]);
+                makeConsistent(os, obs);
+            }
+
+            using namespace arc_dijkstras;
+            GraphEdge& e = graph.getEdge(obs.from, obs.to);
+            e.setValidity(obs.succeeded() ? EDGE_VALIDITY::VALID : EDGE_VALIDITY::INVALID);
+            markInvalidEnvironments(obs);
+            
+            if(obs.succeeded())
+            {
+                cur = obs.to;
+            }
+
         }
+
+        virtual std::unique_ptr<Belief> clone() const override
+        {
+            return cloneExplicit();
+        }
+
+        virtual std::unique_ptr<ExplicitBelief> cloneExplicit() const override
+        {
+            std::unique_ptr<ProjectingObstacleBelief> b =
+                std::make_unique<ProjectingObstacleBelief>(graph, cur);
+            b->obstacle_set = obstacle_set;
+            b->weights = weights;
+            b->cum_sum = cum_sum;
+            b->sum = sum;
+            return b;
+        }
+
     };
 }
 

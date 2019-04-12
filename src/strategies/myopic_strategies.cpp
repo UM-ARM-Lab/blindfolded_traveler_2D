@@ -184,7 +184,16 @@ Action AverageOverClairvoyance::getNextAction(Location current, Observations obs
 
     for(int i=0; i<num_samples; i++)
     {
-        Action a = planPathInEnv(*bel->sample(rng));
+        Action a;
+        try
+        {
+            a = planPathInEnv(*bel->sample(rng));
+        }
+        catch (const std::out_of_range& e)
+        {
+            std::cout << "No path found, skipping this world\n";
+            continue;
+        }
 
         if(actions.count(a) == 0)
         {
