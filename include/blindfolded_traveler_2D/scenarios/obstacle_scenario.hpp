@@ -37,7 +37,7 @@ namespace BTP
         
         virtual void viz(GraphVisualizer &viz) const override
         {
-            viz.vizObstacles(true_state.obstacles);
+            // viz.vizObstacles(true_state.obstacles);
             viz.vizObstacles(true_state.obstacles, 0.01, "True Obstacles");
         }
 

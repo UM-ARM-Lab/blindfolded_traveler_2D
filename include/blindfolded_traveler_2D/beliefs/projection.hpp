@@ -92,7 +92,7 @@ namespace BTP
                 
             if(!test_obstacle.isValid(s.graph->getEdge(obs.from, obs.to), *s.graph))
             {
-                std::cout << "Moving obstacle to oblivion\n";
+                // std::cout << "Moving obstacle to oblivion\n";
                 Rect* r = dynamic_cast<Rect*>(obstacle.get());
                 r->x1 = 1000;
                 r->x2 = 1001;

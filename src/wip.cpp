@@ -17,7 +17,8 @@ int main(int argc, char **argv)
     ros::init(argc, argv, "wip_BTP");
     ros::NodeHandle n;
     std::mt19937 rng;
-    rng.seed(time(0));
+    // rng.seed(time(0));
+    rng.seed(0);
 
     GraphVisualizer viz(n);
     ros::Duration(1).sleep();
@@ -37,8 +38,8 @@ int main(int argc, char **argv)
     // OmniscientStrategy strat(true_state, 24);
 
     // DenseTrapScenario scenario(rng);
-    DenseManyBoxesScenario scenario(rng);
-    AverageOverClairvoyance strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    SparseManyBoxesScenario scenario(rng);
+    // AverageOverClairvoyance strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
     // OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, scenario.bel);
@@ -46,8 +47,8 @@ int main(int argc, char **argv)
 
 
     
-    // ChsBelief chsb = ChsBelief(scenario.getGraph(), scenario.getLocation(), 0.01, 0.1);
-    // ParetoCost strat(scenario.getGraph(), scenario.goal, chsb, 1.0);
+    ChsBelief chsb = ChsBelief(scenario.getGraph(), scenario.getLocation(), 0.01, robot_width);
+    ParetoCost strat(scenario.getGraph(), scenario.goal, chsb, 1.0);
     
 
     Player player(n);

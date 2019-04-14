@@ -180,7 +180,8 @@ Action AverageOverClairvoyance::getNextAction(Location current, Observations obs
     using pair_type = decltype(actions)::value_type;
 
     std::mt19937 rng;
-    rng.seed(time(0));
+    // rng.seed(time(0));
+    rng.seed(1337); //Consistent seed, to avoid alternating actions back an forth due to sample variance
 
     for(int i=0; i<num_samples; i++)
     {
@@ -199,8 +200,15 @@ Action AverageOverClairvoyance::getNextAction(Location current, Observations obs
         {
             actions[a] = 0;
         }
+        // std::cout << "Action " << a << " optimal for sampled world\n";
         actions[a] += 1.0;
     }
+
+    // std::cout << "Action count\n";
+    // for(const auto& kv: actions)
+    // {
+    //     std::cout << kv.first << ": " << kv.second << "\n";
+    // }
 
     auto pr = std::max_element(actions.begin(), actions.end(),
                                [](const pair_type &p1, const pair_type &p2)

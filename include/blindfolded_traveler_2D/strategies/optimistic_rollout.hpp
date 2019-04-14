@@ -34,7 +34,7 @@ namespace BTP
             }
 
             std::mt19937 rng;
-            rng.seed(time(0));
+            rng.seed(1337); //Consistent seed, to avoid alternating actions back an forth due to sample variance
 
             std::map<Action, double> actions;
             

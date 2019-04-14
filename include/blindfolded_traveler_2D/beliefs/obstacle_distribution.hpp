@@ -174,6 +174,9 @@ namespace BTP
 
 
 
+    /*****************************
+     *** Explicit belief that tries harder to keep samples alive by projecting
+     *****************************/
     class ProjectingObstacleBelief : public ObstacleBelief
     {
     public:
@@ -184,7 +187,7 @@ namespace BTP
         
         virtual void update(Observation obs) override
         {
-            std::cout << "projecting update\n";
+            // std::cout << "projecting update\n";
             for(int i=0; i<obstacle_set.size(); i++)
             {
                 if(weights[i] == 0)

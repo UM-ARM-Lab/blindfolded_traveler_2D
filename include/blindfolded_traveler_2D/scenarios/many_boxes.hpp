@@ -55,13 +55,7 @@ namespace BTP
                 edge_validity_check_fn,
                 distance_fn, 
                 &distanceHeuristic, true);
-            if(result.second >= std::numeric_limits<double>::max())
-            {
-                std::cout << "Rejecting state because no valid path\n";
-                return false;
-            }
-            return true;
-
+            return result.second < std::numeric_limits<double>::max();
         }
         
         void generateDistribution(std::mt19937 &rng)
@@ -74,16 +68,17 @@ namespace BTP
                 Obstacles2D::Obstacles o;
                 for(int box_id=0; box_id<num_boxes; box_id++)
                 {
-                    std::uniform_real_distribution<double> rand_offset(0, 1.0);
+                    std::uniform_real_distribution<double> rand_offset(-0.1, 1.1 - min_obstacle_length);
                     double x = rand_offset(rng);
                     double y = rand_offset(rng);
-                    double w = rand_offset(rng)/3 + 0.1;
-                    double h = rand_offset(rng)/3 + 0.1;
+                    double w = rand_offset(rng)/3 + min_obstacle_length;
+                    double h = rand_offset(rng)/3 + min_obstacle_length;
                     o.obs.push_back(std::make_shared<Obstacles2D::Rect>(x, y, x+w, y+h));
                 }
 
                 if(!pathExists(o))
                 {
+                    std::cout << "Rejecting state because no valid path\n";
                     continue;
                 }
                 i++;

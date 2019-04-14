@@ -1,8 +1,11 @@
-#include "scenarios/predefined.hpp"
+
 #include "strategies/myopic_strategies.hpp"
 #include "strategies/optimistic_rollout.hpp"
 #include "strategies/pareto_cost.hpp"
 #include "scenarios/obstacle_scenario.hpp"
+#include "scenarios/predefined.hpp"
+#include "scenarios/trap.hpp"
+#include "scenarios/many_boxes.hpp"
 #include "beliefs/chs.hpp"
 #include "player.hpp"
 #include "ros/ros.h"
@@ -100,7 +103,8 @@ void test5(ScenarioFactory fac)
 void test6(ScenarioFactory fac)
 {
     //Pareto Cost with bayesian belief
-    const std::vector<double> p_weights{0.01, 0.1, 1.0, 10.0, 100};
+    // const std::vector<double> p_weights{0.01, 0.1, 1.0, 10.0, 100};
+    const std::vector<double> p_weights{0.01, 1.0, 100};
     for(const auto w: p_weights)
     {
         rng.seed(seed);
@@ -113,7 +117,8 @@ void test6(ScenarioFactory fac)
 void test7(ScenarioFactory fac)
 {
     //Pareto Cost with CHS belief
-    const std::vector<double> p_weights{0.01, 0.1, 1.0, 10.0, 100};
+    // const std::vector<double> p_weights{0.01, 0.1, 1.0, 10.0, 100};
+    const std::vector<double> p_weights{0.01, 1.0, 100};
     for(const auto w: p_weights)
     {
         rng.seed(seed);
