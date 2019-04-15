@@ -51,7 +51,7 @@ void test(Scenario &scenario, Strategy &strategy)
     ros::NodeHandle n;
     Player player(n);
     ros::Duration(1).sleep(); //Sleep to allow publishers to connect
-    player.run(scenario, strategy, 0.1);
+    player.run(scenario, strategy, 0.2);
 
     std::string filename = scenario.getName() + "_" + strategy.getName() + "_" +
         arc_helpers::GetCurrentTimeAsString();
@@ -104,7 +104,7 @@ void test6(ScenarioFactory fac)
 {
     //Pareto Cost with bayesian belief
     // const std::vector<double> p_weights{0.01, 0.1, 1.0, 10.0, 100};
-    const std::vector<double> p_weights{0.01, 1.0, 100};
+    const std::vector<double> p_weights{1.0};
     for(const auto w: p_weights)
     {
         rng.seed(seed);
@@ -118,7 +118,7 @@ void test7(ScenarioFactory fac)
 {
     //Pareto Cost with CHS belief
     // const std::vector<double> p_weights{0.01, 0.1, 1.0, 10.0, 100};
-    const std::vector<double> p_weights{0.01, 1.0, 100};
+    const std::vector<double> p_weights{1.0};
     for(const auto w: p_weights)
     {
         rng.seed(seed);
@@ -133,9 +133,9 @@ void test7(ScenarioFactory fac)
 std::vector<ScenarioFactory> getAllScenarios()
 {
     std::vector<ScenarioFactory> f;
-    // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseSingleWallScenario>(rng, 0.2);});
+    f.push_back([](std::mt19937& rng) { return std::make_shared<SparseSingleWallScenario>(rng, 0.2);});
     // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseSingleWallScenario>(rng, 0.1);});
-    // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseSingleWallScenario>(rng, 0.5);});
+    f.push_back([](std::mt19937& rng) { return std::make_shared<SparseSingleWallScenario>(rng, 0.5);});
     f.push_back([](std::mt19937& rng) { return std::make_shared<SparseSingleWallScenario>(rng, 1.0);});
     // f.push_back([](std::mt19937& rng) { return std::make_shared<DenseSingleWallScenario>(rng);});
     // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseTrapScenario>(rng);});

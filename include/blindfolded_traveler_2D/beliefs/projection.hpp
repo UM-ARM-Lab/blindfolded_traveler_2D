@@ -63,8 +63,8 @@ namespace BTP
         // r->distance(
         // std::cout << "collision point is " << collision_q[0] << ", " << collision_q[1] << "\n";
 
-        double shiftx = cx - (match_left_edge ? r->x1 : r->x2);
-        double shifty = cy - (match_bottom_edge ? r->y1 : r->y2);
+        double shiftx = cx - (match_left_edge ?   r->x1 + eps : r->x2 - eps);
+        double shifty = cy - (match_bottom_edge ? r->y1 + eps : r->y2 - eps);
 
 
         if(r->y1 < cy && cy < r->y2)

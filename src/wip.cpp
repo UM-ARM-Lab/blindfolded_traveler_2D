@@ -16,6 +16,7 @@ int main(int argc, char **argv)
 {
     ros::init(argc, argv, "wip_BTP");
     ros::NodeHandle n;
+
     std::mt19937 rng;
     // rng.seed(time(0));
     rng.seed(0);
@@ -26,7 +27,7 @@ int main(int argc, char **argv)
 
     // IndependentBlockageGridScenario scenario(5);
     // WallObstacleScenario scenario;
-    // SparsexSingleWallScenario scenario;
+    SingleWallPoorPrior scenario(rng, 1.0);
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
 
     
@@ -41,8 +42,8 @@ int main(int argc, char **argv)
     // SparseManyBoxesScenario scenario(rng);
     // AverageOverClairvoyance strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
-    OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
-    // OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    // OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // ParetoCost strat(scenario.getGraph(), scenario.goal, scenario.bel, 1.0);
 
 

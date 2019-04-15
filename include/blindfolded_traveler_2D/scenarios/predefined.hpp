@@ -32,12 +32,26 @@ namespace BTP
     public:
         ProjectingObstacleBelief bel;
         std::shared_ptr<Obstacles2D::Rect> true_rect;
+        std::shared_ptr<Obstacles2D::Rect> prior_rect;
         double noise;
         
         SingleWallScenario(std::mt19937& rng, GraphD graph, int start, int goal, double noise) :
             ObstacleScenario(graph, start, goal),
             bel(getGraph(), getLocation()),
             noise(noise)
+        {
+            true_rect = std::make_shared<Obstacles2D::Rect>(0.4, 0.1, 0.7, 1.05);
+            prior_rect = true_rect;
+            SingleWallScenario(rng, graph, start, goal, noise, prior_rect);
+        }
+
+        
+        SingleWallScenario(std::mt19937& rng, GraphD graph, int start, int goal, double noise,
+                           std::shared_ptr<Obstacles2D::Rect> prior_rect) :
+            ObstacleScenario(graph, start, goal),
+            bel(getGraph(), getLocation()),
+            noise(noise),
+            prior_rect(prior_rect)
         {
             name = "Wall_Distribution";
             true_rect = std::make_shared<Obstacles2D::Rect>(0.4, 0.1, 0.7, 1.05);
@@ -51,7 +65,7 @@ namespace BTP
         }
 
     private:
-        void generateDistribution(std::mt19937 &rng)
+        virtual void generateDistribution(std::mt19937 &rng)
         {
             int i=0;
             while(i < 1000)
@@ -60,7 +74,7 @@ namespace BTP
                 double dx = rand_offset(rng);
                 double dy = rand_offset(rng);
 
-                auto sampled_rect = std::make_shared<Obstacles2D::Rect>(*true_rect);
+                auto sampled_rect = std::make_shared<Obstacles2D::Rect>(*prior_rect);
                 shift(*sampled_rect, dx, dy);
                 
                 Obstacles2D::Obstacles o;
@@ -95,6 +109,18 @@ namespace BTP
             SingleWallScenario(rng, Grid(20), 0, 399, noise)
         {
             name = "Single_Wall_Dense_Graph";
+        }
+    };
+
+
+    class SingleWallPoorPrior : public SingleWallScenario
+    {
+    public:
+        SingleWallPoorPrior(std::mt19937& rng, double noise):
+            SingleWallScenario(rng, Grid(5), 0, 24, noise,
+                               std::make_shared<Obstacles2D::Rect>(0.1, 0.1, 0.2, 0.2))
+        {
+            
         }
     };
 }
