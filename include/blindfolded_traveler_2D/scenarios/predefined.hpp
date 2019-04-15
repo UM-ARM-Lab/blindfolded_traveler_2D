@@ -56,7 +56,7 @@ namespace BTP
             int i=0;
             while(i < 1000)
             {
-                std::uniform_real_distribution<double> rand_offset(-noise, noise);
+                std::normal_distribution<double> rand_offset(0.0, noise);
                 double dx = rand_offset(rng);
                 double dy = rand_offset(rng);
 
