@@ -37,10 +37,18 @@ namespace BTP
             rng.seed(1337); //Consistent seed, to avoid alternating actions back an forth due to sample variance
 
             std::map<Action, double> actions;
-            
+
+
             for(int i=0; i<num_rollouts; i++)
             {
+
                 std::unique_ptr<State> sampled_state = bel->sample(rng);
+                while(!sampled_state->pathExists(goal))
+                {
+                    std::cout << "Resampling state that has a path to the goal\n";
+                    sampled_state = bel->sample(rng);
+                }
+                
                 auto possible_actions = sampled_state->getActions(sampled_state->current_location);
 
                 for(auto initial_action: possible_actions)
@@ -79,6 +87,11 @@ namespace BTP
         {
             auto result = arc_dijkstras::AstarLogging<std::vector<double>>::PerformAstar(
                 rollout_graph, s->current_location, goal, &distanceHeuristic, true);
+
+            if(result.second >= std::numeric_limits<double>::max())
+            {
+                throw std::logic_error("No valid path to goal");
+            }
 
             return result.first[1];
    

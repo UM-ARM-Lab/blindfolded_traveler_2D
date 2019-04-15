@@ -46,7 +46,7 @@ namespace BTP
             PROFILE_RECORD_DOUBLE("InvalidEdgesAttempted", scenario.invalid_edges_attempted);
         }
         
-        void run(Scenario &scenario, Strategy &strat, double sleep_time_s = 0)
+        bool run(Scenario &scenario, Strategy &strat, double sleep_time_s = 0)
         {
             scenario.viz(viz);
 
@@ -76,14 +76,17 @@ namespace BTP
             //run one final time to update belief for visualization
             strat.getNextAction(scenario.getLocation(), scenario.getObservations(), viz);
 
+            reportStats(scenario);
+            recordStats(scenario);
+
+
             if(action_count == action_limit)
             {
                 std::cout << "Exiting without success because action limit reached\n";
                 PROFILE_RECORD_DOUBLE("Action Limit Exceeded", action_count);
+                return false;
             }
-            
-            reportStats(scenario);
-            recordStats(scenario);
+            return true;
         }
     };
 }

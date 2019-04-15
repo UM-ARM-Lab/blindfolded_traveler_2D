@@ -32,31 +32,6 @@ namespace BTP
 
     private:
 
-        bool pathExists(Obstacles2D::Obstacles &o)
-        {
-            ObstacleState s(&graph, true_state.current_location, o);
-
-            using namespace arc_dijkstras;
-
-            const auto distance_fn = [&] (const GraphD& search_graph, const GraphEdge& edge)
-                {
-                    UNUSED(search_graph);
-                    return edge.getWeight();
-                };
-
-            const auto edge_validity_check_fn = [&] (const GraphD& search_graph, const GraphEdge& edge)
-                {
-                    UNUSED(search_graph);
-                    return s.getBlockage(edge.getFromIndex(), edge.getToIndex()) >= 1;
-                };
-
-            auto result = arc_dijkstras::AstarLogging<std::vector<double>>::PerformLazyAstar(
-                graph, true_state.current_location, goal,
-                edge_validity_check_fn,
-                distance_fn, 
-                &distanceHeuristic, true);
-            return result.second < std::numeric_limits<double>::max();
-        }
         
         void generateDistribution(std::mt19937 &rng)
         {

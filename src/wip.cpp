@@ -38,24 +38,24 @@ int main(int argc, char **argv)
     // OmniscientStrategy strat(true_state, 24);
 
     // DenseTrapScenario scenario(rng);
-    SparseManyBoxesScenario scenario(rng);
+    // SparseManyBoxesScenario scenario(rng);
     // AverageOverClairvoyance strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
-    // OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // ParetoCost strat(scenario.getGraph(), scenario.goal, scenario.bel, 1.0);
 
 
     
-    ChsBelief chsb = ChsBelief(scenario.getGraph(), scenario.getLocation(), 0.01, robot_width);
-    ParetoCost strat(scenario.getGraph(), scenario.goal, chsb, 1.0);
+    // ChsBelief chsb = ChsBelief(scenario.getGraph(), scenario.getLocation(), 0.01, robot_width);
+    // ParetoCost strat(scenario.getGraph(), scenario.goal, chsb, 1.0);
     
 
     Player player(n);
 
     ros::Duration(1).sleep(); //Sleep to allow publishers to connect
 
-    player.run(scenario, strat, 0.2);
+    player.run(scenario, strat, 0.4);
 
 
     ros::Duration(1).sleep(); //sleep to allow final messages to reach RViz

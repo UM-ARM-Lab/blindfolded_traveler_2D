@@ -31,7 +31,7 @@ TEST(basic_behavior, optimistic_random_wall)
 {
     ros::NodeHandle n;
     std::mt19937 rng;
-    SparseSingleWallScenario scenario(rng);
+    SparseSingleWallScenario scenario(rng, 0.0);
     OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
     Player player(n);
     player.run(scenario, strat);
@@ -77,6 +77,40 @@ TEST(basic_behavior, obstacle_distribution_likelihood)
         EXPECT_EQ(ob.getLikelihood(u), 1.0) <<
             "Expected edge (" << u.from << ", " << u.to << ") to be unblocked";
     }
+}
+
+
+TEST(strategy_baselines, test_that_omnicient_strategy_succeeds)
+{
+    ros::NodeHandle n;
+    std::mt19937 rng;
+    SparseSingleWallScenario scenario(rng, 1.0);
+    OmniscientStrategy strat(scenario.getState(), scenario.goal);
+    Player player(n);
+    bool reached_goal = player.run(scenario, strat, 0.0);
+    EXPECT_TRUE(reached_goal) << "Omnicient strategy did not reach the goal";
+}
+
+TEST(strategy_baselines, test_that_optimistic_strategy_succeeds)
+{
+    ros::NodeHandle n;
+    std::mt19937 rng;
+    SparseSingleWallScenario scenario(rng, 1.0);
+    OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
+    Player player(n);
+    bool reached_goal = player.run(scenario, strat, 0.0);
+    EXPECT_TRUE(reached_goal) << "Omnicient strategy did not reach the goal";
+}
+
+TEST(strategy_baselines, test_that_optimistic_strategy_with_prior_succeeds)
+{
+    ros::NodeHandle n;
+    std::mt19937 rng;
+    SparseSingleWallScenario scenario(rng, 1.0);
+    OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, scenario.getPrior());
+    Player player(n);
+    bool reached_goal = player.run(scenario, strat, 0.0);
+    EXPECT_TRUE(reached_goal) << "Omnicient strategy did not reach the goal";
 }
 
 

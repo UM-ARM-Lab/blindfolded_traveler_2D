@@ -50,6 +50,16 @@ namespace BTP
         {
             return true_state;
         }
+
+
+        
+        bool pathExists(Obstacles2D::Obstacles &o)
+        {
+            ObstacleState s(&graph, true_state.current_location, o);
+            return s.pathExists(goal);
+
+        }
+
     };
 }
 

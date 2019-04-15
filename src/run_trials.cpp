@@ -80,7 +80,7 @@ void test3(ScenarioFactory fac)
 {
     rng.seed(seed);
     auto scenario_ptr = fac(rng);
-    AverageOverClairvoyance strat(scenario_ptr->getGraph(), scenario_ptr->goal, scenario_ptr->getPrior());
+    OptimisticWithPrior strat(scenario_ptr->getGraph(), scenario_ptr->goal, scenario_ptr->getPrior());
     test(*scenario_ptr, strat);
 }
 
@@ -96,7 +96,7 @@ void test5(ScenarioFactory fac)
 {
     rng.seed(seed);
     auto scenario_ptr = fac(rng);
-    OptimisticWithPrior strat(scenario_ptr->getGraph(), scenario_ptr->goal, scenario_ptr->getPrior());
+    AverageOverClairvoyance strat(scenario_ptr->getGraph(), scenario_ptr->goal, scenario_ptr->getPrior());
     test(*scenario_ptr, strat);
 }
 
@@ -123,7 +123,7 @@ void test7(ScenarioFactory fac)
     {
         rng.seed(seed);
         auto scenario_ptr = fac(rng);
-        ChsBelief chsb = ChsBelief(scenario_ptr->getGraph(), scenario_ptr->getLocation(), 0.01, 0.1);
+        ChsBelief chsb = ChsBelief(scenario_ptr->getGraph(), scenario_ptr->getLocation(), 0.01, robot_width);
         ParetoCost strat(scenario_ptr->getGraph(), scenario_ptr->goal, chsb, w);
         test(*scenario_ptr, strat);
     }
@@ -133,25 +133,31 @@ void test7(ScenarioFactory fac)
 std::vector<ScenarioFactory> getAllScenarios()
 {
     std::vector<ScenarioFactory> f;
-    f.push_back([](std::mt19937& rng) { return std::make_shared<SparseSingleWallScenario>(rng);});
-    f.push_back([](std::mt19937& rng) { return std::make_shared<DenseSingleWallScenario>(rng);});
+    // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseSingleWallScenario>(rng, 0.2);});
+    // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseSingleWallScenario>(rng, 0.1);});
+    // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseSingleWallScenario>(rng, 0.5);});
+    f.push_back([](std::mt19937& rng) { return std::make_shared<SparseSingleWallScenario>(rng, 1.0);});
+    // f.push_back([](std::mt19937& rng) { return std::make_shared<DenseSingleWallScenario>(rng);});
+    // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseTrapScenario>(rng);});
+    // f.push_back([](std::mt19937& rng) { return std::make_shared<DenseManyBoxesScenario>(rng);});
     return f;
 }
 
 
 void testAll()
 {
-    seed = time(0);
+    // seed = time(0);
+    seed = 0; //hardcode seed so results are repeatable
 
     for(auto scenario_factory: getAllScenarios())
     {
-        test1(scenario_factory);
-        test2(scenario_factory);
-        test3(scenario_factory);
-        test4(scenario_factory);
-        test5(scenario_factory);
-        test6(scenario_factory);
-        test7(scenario_factory);
+        test1(scenario_factory); //Omniscient
+        test2(scenario_factory); //Optimistic
+        test3(scenario_factory); //Optimistic With Prior
+        test4(scenario_factory); //Optimistic Rollout
+        test5(scenario_factory); //Average Over Clairvoyance
+        test6(scenario_factory); //Pareto Cost w/prior
+        test7(scenario_factory); //Pareto Cost CHS
     }
 
 }
