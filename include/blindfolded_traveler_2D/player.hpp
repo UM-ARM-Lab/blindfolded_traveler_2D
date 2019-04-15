@@ -56,7 +56,10 @@ namespace BTP
             PROFILE_RECORD_DOUBLE("Strategy: " + strat.getName(), 0);
             PROFILE_RECORD_DOUBLE("Scenario: " + scenario.getName(), 0);
 
-            while(!scenario.completed())
+            int action_count = 0;
+            int action_limit = 30;
+
+            while(!scenario.completed() && action_count < action_limit)
             {
                 PROFILE_START("Planning Action");
                 Action a = strat.getNextAction(scenario.getLocation(), scenario.getObservations(), viz);
@@ -67,11 +70,18 @@ namespace BTP
                 strat.viz(viz);                
                 
                 ros::Duration(sleep_time_s).sleep();
+                action_count++;
             }
 
             //run one final time to update belief for visualization
             strat.getNextAction(scenario.getLocation(), scenario.getObservations(), viz);
 
+            if(action_count == action_limit)
+            {
+                std::cout << "Exiting without success because action limit reached\n";
+                PROFILE_RECORD_DOUBLE("Action Limit Exceeded", action_count);
+            }
+            
             reportStats(scenario);
             recordStats(scenario);
         }
