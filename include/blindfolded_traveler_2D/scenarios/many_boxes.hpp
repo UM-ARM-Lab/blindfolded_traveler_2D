@@ -36,10 +36,10 @@ namespace BTP
 
         void makeTrueState()
         {
-            true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.1, 0.4, 0.2, 0.76));
-            true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.1, 0.74, 0.22, 1.1));
-            true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.15, 0.4, 0.4, 0.5));
-            true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.4, 0.4, 0.8, 0.5));
+            true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.1, 0.4, 0.3, 0.76));
+            true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.1, 0.74, 0.32, 1.02));
+            true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.15, 0.4, 0.4, 0.6));
+            true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.4, 0.4, 0.8, 0.6));
             true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.3, 0.2, 0.5, 0.4));
             true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.9, -0.1, 1.1, 0.1));
             // true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.1, 0.4, 0.2, 0.5));

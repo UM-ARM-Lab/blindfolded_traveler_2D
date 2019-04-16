@@ -133,13 +133,14 @@ void test7(ScenarioFactory fac)
 std::vector<ScenarioFactory> getAllScenarios()
 {
     std::vector<ScenarioFactory> f;
-    f.push_back([](std::mt19937& rng) { return std::make_shared<SparseSingleWallScenario>(rng, 0.2);});
+    // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseSingleWallScenario>(rng, 0.2);});
     // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseSingleWallScenario>(rng, 0.1);});
-    f.push_back([](std::mt19937& rng) { return std::make_shared<SparseSingleWallScenario>(rng, 0.5);});
-    f.push_back([](std::mt19937& rng) { return std::make_shared<SparseSingleWallScenario>(rng, 1.0);});
+    // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseSingleWallScenario>(rng, 0.5);});
+    // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseSingleWallScenario>(rng, 1.0);});
+    
     // f.push_back([](std::mt19937& rng) { return std::make_shared<DenseSingleWallScenario>(rng);});
     // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseTrapScenario>(rng);});
-    // f.push_back([](std::mt19937& rng) { return std::make_shared<DenseManyBoxesScenario>(rng);});
+    f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.05);});
     return f;
 }
 

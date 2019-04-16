@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 
     ros::Duration(1).sleep(); //Sleep to allow publishers to connect
 
-    player.run(scenario, strat, 0.4);
+    player.run(scenario, strat, 1.4);
 
 
     ros::Duration(1).sleep(); //sleep to allow final messages to reach RViz
