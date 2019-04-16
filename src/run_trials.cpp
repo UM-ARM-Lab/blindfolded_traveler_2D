@@ -141,6 +141,8 @@ std::vector<ScenarioFactory> getAllScenarios()
     // f.push_back([](std::mt19937& rng) { return std::make_shared<DenseSingleWallScenario>(rng);});
     // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseTrapScenario>(rng);});
     f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.05);});
+    f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.1);});
+    f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.3);});
     return f;
 }
 

@@ -31,13 +31,13 @@ def get_scenarios(experiments):
     """ Returns a set of all scenarios in the experiments"""
     return {exp.scenario for exp in experiments}
 
-def plot_data(all_experiments):
+def plot_data(all_experiments, save_path):
     for scenario in get_scenarios(all_experiments):
         exps = [exp for exp in all_experiments if exp.scenario == scenario]
-        plot_scenario(exps)
+        plot_scenario(exps, save_path)
     
 
-def plot_scenario(experiments):
+def plot_scenario(experiments, save_path):
 
     """Plots a list of experiments all belonging to the same scenario"""
 
@@ -52,6 +52,9 @@ def plot_scenario(experiments):
     ax.set_xticklabels(x_labels)
     plt.tight_layout()
     plt.show()
+    ax.get_figure().savefig(save_path + experiments[0].scenario + ".png")
+
+
 
 
 def load_file(filepath, filename):
@@ -81,8 +84,12 @@ def load_all_files():
     path = rospkg.RosPack().get_path('blindfolded_traveler_2D') + experiment_dir
     experiments = []
     for name in os.listdir(path):
+        if name.endswith(".png") or\
+           name.endswith(".pdf"):
+           continue;
         experiments.append(load_file(path, name))
-    plot_data(experiments)
+    plot_data(experiments, path)
+    
 
 
 if __name__=='__main__':

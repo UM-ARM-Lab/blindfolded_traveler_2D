@@ -91,7 +91,7 @@ namespace BTP
         SparseManyBoxesScenario(std::mt19937& rng, double noise) :
             ManyBoxesScenario(rng, Grid(5), 0, 24, noise)
         {
-            name = "ManyBoxes_Sparse_Graph";
+            name = "ManyBoxes_Sparse_Graph_noise=" + std::to_string(noise);
         }
     };
 
