@@ -83,7 +83,7 @@ namespace BTP
             if(action_count == action_limit)
             {
                 std::cout << "Exiting without success because action limit reached\n";
-                PROFILE_RECORD_DOUBLE("Action Limit Exceeded", action_count);
+                PROFILE_RECORD_DOUBLE("Action_Limit_Exceeded", action_count);
                 return false;
             }
             return true;

@@ -51,7 +51,7 @@ void test(Scenario &scenario, Strategy &strategy)
     ros::NodeHandle n;
     Player player(n);
     ros::Duration(1).sleep(); //Sleep to allow publishers to connect
-    player.run(scenario, strategy, 0.2);
+    player.run(scenario, strategy, 0.3);
 
     std::string filename = scenario.getName() + "_" + strategy.getName() + "_" +
         arc_helpers::GetCurrentTimeAsString();
@@ -165,10 +165,32 @@ void testAll()
 
 }
 
+void testForVideo()
+{
+    seed = 0;
+    auto sfs = getAllScenarios();
+
+    test1(sfs[0]); //Omniscient
+    test2(sfs[0]); //Optimistic
+
+    for(auto sf: sfs)
+        test3(sf); //Optimistic With Prior
+    for(auto sf: sfs)
+        test4(sf); //Optimistic Rollout
+    for(auto sf: sfs)
+        test5(sf); //Average Over Clairvoyance
+    for(auto sf: sfs)
+        test6(sf); //Pareto Cost w/prior
+    
+    test7(sfs[0]); //Pareto Cost CHS
+
+}
+
 
 
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "run_trials");
-    testAll();
+    // testAll();
+    testForVideo();
 }

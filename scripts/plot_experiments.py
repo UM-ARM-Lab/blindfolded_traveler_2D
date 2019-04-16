@@ -25,6 +25,7 @@ class Experiment:
     strategy = None
     exec_cost = None
     pareto_weight = None
+    succeeded = True
 
 
 def get_scenarios(experiments):
@@ -43,7 +44,7 @@ def plot_scenario(experiments, save_path):
 
     experiments.sort(key=lambda e:e.strategy)
 
-    series = pd.Series([e.exec_cost for e in experiments])
+    series = pd.Series([e.exec_cost * e.succeeded for e in experiments])
     ax = series.plot(kind='bar')
     
     ax.set_title(experiments[0].scenario)
@@ -74,6 +75,8 @@ def load_file(filepath, filename):
                 exp.strategy = parts[1]
             elif parts[0] == "Scenario:":
                 exp.scenario = parts[1]
+            elif parts[0] == "Action_Limit_Exceeded":
+                exp.succeeded = False
             line = f.readline()
     
     # IPython.embed()
