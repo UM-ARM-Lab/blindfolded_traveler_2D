@@ -42,7 +42,8 @@ namespace BTP
         {
             true_rect = std::make_shared<Obstacles2D::Rect>(0.4, 0.1, 0.7, 1.05);
             prior_rect = true_rect;
-            SingleWallScenario(rng, graph, start, goal, noise, prior_rect);
+            true_state.obstacles.obs.push_back(true_rect);
+            generateDistribution(rng);
         }
 
         
