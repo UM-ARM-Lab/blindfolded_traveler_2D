@@ -14,6 +14,7 @@ namespace BTP
     inline bool isConsistent(const Observation& obs, const ObstacleState& s)
     {
         Observation should(obs.from, obs.to, s.getBlockage(obs.from, obs.to));
+        return std::fabs(should.blockage - obs.blockage) < 0.05;
         return should.succeeded() == obs.succeeded();
     }
 
