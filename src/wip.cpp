@@ -27,7 +27,8 @@ int main(int argc, char **argv)
 
     // IndependentBlockageGridScenario scenario(5);
     // WallObstacleScenario scenario;
-    SingleWallPoorPrior scenario(rng, 1.0);
+    // SparseSingleWallScenario scenario(rng, 1.0);
+    // SingleWallPoorPrior scenario(rng, 1.0);
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
 
     
@@ -39,7 +40,8 @@ int main(int argc, char **argv)
     // OmniscientStrategy strat(true_state, 24);
 
     // DenseTrapScenario scenario(rng);
-    // SparseManyBoxesScenario scenario(rng);
+    SparseManyBoxesScenario scenario(rng, 0.05);
+    
     // AverageOverClairvoyance strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
     // OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
