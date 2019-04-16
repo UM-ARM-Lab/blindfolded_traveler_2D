@@ -34,6 +34,70 @@ namespace BTP
         r.y2 += y;
     }
 
+    inline void shiftToContactPoint(Obstacles2D::Rect *r, std::vector<double> collision_q,
+                                    std::vector<double> from, std::vector<double> to)
+    {
+        double eps = 0.000001;
+        double cx = collision_q[0];
+        double cy = collision_q[1];
+
+        //if edge goes left to right, collision occurred on obstacle left edge
+        bool match_left_edge = from[0] < to[0];
+
+        //if edge goes down to up, collision occurred on obstacle bottom
+        bool match_bottom_edge = from[1] < to[1];
+
+
+        double shiftx = cx - (match_left_edge ?   r->x1 + eps : r->x2 - eps);
+        double shifty = cy - (match_bottom_edge ? r->y1 + eps : r->y2 - eps);
+
+
+        if(from[1] == to[1]) //horizontal edge in graph
+        {
+            shift(*r, shiftx, 0); //make side wall of rect match collision point
+            
+            if(cy < r->y1) //shift up or down as needed
+            {
+                shift(*r, 0, cy - r->y1 - eps);
+            }
+            if(cy > r->y2)
+            {
+                shift(*r, 0, cy - r->y2 + eps);
+            }
+            return;
+        }
+        
+        if(from[0] == to[0]) //pure vertical edge in graph
+        {
+            shift(*r, 0, shifty);
+
+            if(cx < r->x1)
+            {
+                shift(*r, cx - r->x1 - eps, 0);
+            }
+            if(cx > r->x2)
+            {
+                shift(*r, cx - r->x2 + eps, 0);
+            }
+            return;
+        }
+
+        if(r->y1 < cy && cy < r->y2)
+        {
+            shift(*r, shiftx, 0);
+            return;
+        }
+        else if(r->x1 < cx && cx < r->x2)
+        {
+            shift(*r, 0, shifty);
+            return;
+        }
+
+        shift(*r, shiftx, shifty);
+
+    }
+
+
     /*
      *  Shifts obstacles around to make them consistent with the provided observation
      *
@@ -49,38 +113,11 @@ namespace BTP
         auto to = s.graph->getNode(obs.to).getValue();
         double eps = 0.000001;
         std::vector<double> collision_q = EigenHelpers::Interpolate(from, to, obs.blockage + eps);
-        double cx = collision_q[0];
-        double cy = collision_q[1];
-
         Rect* r = dynamic_cast<Rect*>(getNearest(s.obstacles, collision_q).get());
-
-        //if edge goes left to right, collision occurred on obstacle left edge
-        bool match_left_edge = from[0] < to[0];
-
-        //if edge goes down to up, collision occurred on obstacle bottom
-        bool match_bottom_edge = from[1] < to[1];
-
-        // r->distance(
-        // std::cout << "collision point is " << collision_q[0] << ", " << collision_q[1] << "\n";
-
-        double shiftx = cx - (match_left_edge ?   r->x1 + eps : r->x2 - eps);
-        double shifty = cy - (match_bottom_edge ? r->y1 + eps : r->y2 - eps);
-
-
-        if(r->y1 < cy && cy < r->y2)
-        {
-            shift(*r, shiftx, 0);
-            return;
-        }
-        else if(r->x1 < cx && cx < r->x2)
-        {
-            shift(*r, 0, shifty);
-            return;
-        }
-
-
-        shift(*r, shiftx, shifty);
+        shiftToContactPoint(r, collision_q, from, to);
     }
+
+
 
     inline void makeConsistentFree(ObstacleState& s, Observation obs)
     {
