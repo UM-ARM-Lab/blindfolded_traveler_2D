@@ -53,13 +53,27 @@ namespace BTP
 
                 for(auto initial_action: possible_actions)
                 {
+                    if(graph.getEdge(sampled_state->current_location, initial_action).getValidity()
+                       == arc_dijkstras::EDGE_VALIDITY::INVALID)
+                    {
+                        continue;
+                    }
+                    
                     std::unique_ptr<State> rollout_state = sampled_state->clone();
                     GraphD rollout_graph = graph;
                     double rollout_cost = 0;
                     Observation ob = transition(rollout_state.get(), initial_action, rollout_cost);
                     updateGraph(rollout_graph, ob);
 
-                    rollout_cost += rolloutOptimistic(rollout_graph, rollout_state.get());
+                    try
+                    {
+                        rollout_cost += rolloutOptimistic(rollout_graph, rollout_state.get());
+                    }
+                    catch(std::logic_error &e)
+                    {
+                        std::cout << "Rollout failed\n";
+                        continue;
+                    }
 
                     if(actions.count(initial_action) == 0)
                     {
@@ -67,6 +81,11 @@ namespace BTP
                     }
                     actions[initial_action] += rollout_cost;
                 }
+            }
+
+            if(actions.size() == 0)
+            {
+                throw std::logic_error("All rollouts failed: No valid actions found");
             }
 
             using pair_type = decltype(actions)::value_type;
