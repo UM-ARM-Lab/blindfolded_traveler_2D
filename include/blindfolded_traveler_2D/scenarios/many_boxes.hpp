@@ -36,11 +36,11 @@ namespace BTP
 
         void makeTrueState()
         {
-            true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.1, 0.4, 0.3, 0.76));
-            true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.1, 0.74, 0.32, 1.02));
-            true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.15, 0.4, 0.4, 0.6));
+            true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.24, 0.4, 0.47, 0.76));
+            true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.24, 0.74, 0.51, 1.02));
+            true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.35, 0.4, 0.6, 0.6));
             true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.4, 0.4, 0.8, 0.6));
-            true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.3, 0.2, 0.5, 0.4));
+            true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.27, 0.1, 0.48, 0.4));
             true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.9, -0.1, 1.1, 0.1));
             // true_state.obstacles.obs.push_back(std::make_shared<Obstacles2D::Rect>(0.1, 0.4, 0.2, 0.5));
         }
@@ -101,7 +101,7 @@ namespace BTP
         DenseManyBoxesScenario(std::mt19937& rng, double noise) :
             ManyBoxesScenario(rng, Grid(20), 0, 399, noise)
         {
-            name = "ManyBoxes_Dense_Graph";
+            name = "ManyBoxes_Dense_Graph_noise=" + std::to_string(noise);
         }
     };
 }

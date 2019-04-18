@@ -57,7 +57,7 @@ namespace BTP
             PROFILE_RECORD_DOUBLE("Scenario: " + scenario.getName(), 0);
 
             int action_count = 0;
-            int action_limit = 30;
+            int action_limit = 300;
 
             while(!scenario.completed() && action_count < action_limit)
             {
