@@ -29,7 +29,7 @@ namespace BTP
         OptimisticStrategy(GraphD graph, Location goal) :
             Strategy(graph, goal)
         {
-            name = "Optimistic";
+            name = "NaiveOptimistic";
         }
         
         void updateBelief(Observation obs)
@@ -52,7 +52,7 @@ namespace BTP
         OptimisticWithPrior(GraphD graph, Location goal, const Belief &bel):
             Strategy(graph, goal), bel(bel.clone()), num_samples(100)
         {
-            name = "OptimisticWithPrior";
+            name = "Optimistic";
         }
 
         void updateEdges();

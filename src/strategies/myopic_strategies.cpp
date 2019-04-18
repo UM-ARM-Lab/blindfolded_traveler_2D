@@ -76,7 +76,7 @@ Action OptimisticStrategy::getNextAction(Location current, Observations obs)
 void OptimisticWithPrior::updateEdges()
 {
     std::mt19937 rng;
-    rng.seed(time(0));
+    rng.seed(0);
 
     std::vector<std::unique_ptr<State>> sampled_states;
 
@@ -117,8 +117,8 @@ Action OptimisticWithPrior::getNextAction(Location current, Observations obs)
     if(obs.size() > 0)
     {
         bel->update(obs.back());
-        updateEdges();
     }
+    updateEdges();
 
     if(current == goal)
     {

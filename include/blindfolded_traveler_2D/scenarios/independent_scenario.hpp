@@ -3,6 +3,8 @@
 #include "scenarios/scenario.hpp"
 #include "graph_planner/halton_graph.hpp"
 
+//NOTE: This is a stub, unfinished
+
 
 namespace BTP
 {

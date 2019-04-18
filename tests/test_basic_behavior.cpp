@@ -1,6 +1,5 @@
 #include "states/state.hpp"
 #include "scenarios/scenario.hpp"
-#include "scenarios/independent_scenario.hpp"
 #include "scenarios/obstacle_scenario.hpp"
 #include "strategies/myopic_strategies.hpp"
 #include "player.hpp"

@@ -72,18 +72,27 @@ namespace BTP
     class IndependentBlockageState : public State
     {
     public:
-        IndependentBlockageState(const GraphD* graph, Location cur) :
-            State(graph, cur)
+        std::set<arc_dijkstras::HashableEdge> blocked_edges;
+        
+    public:
+        IndependentBlockageState(const GraphD* graph, Location cur, std::set<arc_dijkstras::HashableEdge> blocked_edges) :
+            State(graph, cur),
+            blocked_edges(blocked_edges)
         {};
 
         virtual std::unique_ptr<State> clone() const override
         {
-            return std::make_unique<IndependentBlockageState>(graph, current_location);
+            return std::make_unique<IndependentBlockageState>(graph, current_location, blocked_edges);
         }
-        
+
         double getBlockage(Location l, Action a) const override
         {
-            return 1; //TODO define a blockage variable and return based on it
+            arc_dijkstras::HashableEdge e(l, a);
+            if(blocked_edges.count(e))
+            {
+                return 0.5; //TODO: This just blocks the edge half way. Not very sophistocated
+            }
+            return 1.0;
         }
 
         virtual void debug() const override

@@ -6,6 +6,7 @@
 #include "scenarios/trap.hpp"
 #include "scenarios/many_boxes.hpp"
 #include "beliefs/chs.hpp"
+#include "beliefs/indep_edge_belief.hpp"
 #include "player.hpp"
 #include "ros/ros.h"
 
@@ -40,13 +41,15 @@ int main(int argc, char **argv)
     // OmniscientStrategy strat(true_state, 24);
 
     // DenseTrapScenario scenario(rng);
-    SparseManyBoxesScenario scenario(rng, 0.3, std::vector<double>{0.3, -0.3});
+    SparseManyBoxesScenario scenario(rng, 0.1, std::vector<double>{0.0, -0.0});
     // DenseManyBoxesScenario scenario(rng, 0.05, std::vector<double>{0.3, -0.3});
+    // ObstacleBelief bel = scenario.bel;
+    IndepEdgeBelief bel(scenario.bel);
     
     // AverageOverClairvoyance strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
     // OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
-    OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, bel);
     // ParetoCost strat(scenario.getGraph(), scenario.goal, scenario.bel, 1.0);
 
 
