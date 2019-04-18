@@ -16,11 +16,14 @@ namespace BTP
     public:
         ProjectingObstacleBelief bel;
         double noise;
+        const std::vector<double> bias;
         
-        ManyBoxesScenario(std::mt19937& rng, GraphD graph, int start, int goal, double noise) :
+        ManyBoxesScenario(std::mt19937& rng, GraphD graph, int start, int goal, double noise,
+                          const std::vector<double>& bias = {0,0}) :
             ObstacleScenario(graph, start, goal),
             bel(getGraph(), getLocation()),
-            noise(noise)
+            noise(noise),
+            bias(bias)
         {
             name = "Wall_Distribution";
             makeTrueState();
@@ -68,8 +71,8 @@ namespace BTP
                 {
                     auto noisy_rect = std::make_shared<Rect>(*dynamic_cast<Rect*>(true_obstacle.get()));
                     std::normal_distribution<double> rand_offset(0.0, noise);
-                    double dx = rand_offset(rng);
-                    double dy = rand_offset(rng);
+                    double dx = rand_offset(rng) + bias[0];
+                    double dy = rand_offset(rng) + bias[1];
                     shift(*noisy_rect, dx, dy);
                     particle.obs.push_back(noisy_rect);
                 }
@@ -88,18 +91,18 @@ namespace BTP
     class SparseManyBoxesScenario : public ManyBoxesScenario
     {
     public:
-        SparseManyBoxesScenario(std::mt19937& rng, double noise) :
-            ManyBoxesScenario(rng, Grid(5), 0, 24, noise)
+        SparseManyBoxesScenario(std::mt19937& rng, double noise, const std::vector<double>& bias = {0,0}) :
+            ManyBoxesScenario(rng, Grid(5), 0, 24, noise, bias)
         {
-            name = "ManyBoxes_Sparse_Graph_noise=" + std::to_string(noise);
+            name = "ManyBoxes_noise=" + std::to_string(noise);
         }
     };
 
     class DenseManyBoxesScenario : public ManyBoxesScenario
     {
     public:
-        DenseManyBoxesScenario(std::mt19937& rng, double noise) :
-            ManyBoxesScenario(rng, Grid(20), 0, 399, noise)
+        DenseManyBoxesScenario(std::mt19937& rng, double noise, const std::vector<double>& bias = {0,0}) :
+            ManyBoxesScenario(rng, Grid(20), 0, 399, noise, bias)
         {
             name = "ManyBoxes_Dense_Graph_noise=" + std::to_string(noise);
         }

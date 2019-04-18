@@ -57,6 +57,11 @@ Action OptimisticStrategy::getNextAction(Location current, Observations obs)
     auto result = arc_dijkstras::AstarLogging<std::vector<double>>::PerformAstar(
         graph, current, goal, &distanceHeuristic, true);
 
+    if(result.second >= std::numeric_limits<double>::max())
+    {
+        throw std::logic_error("No valid path to goal");
+    }
+
     return result.first[1];
 }
 
@@ -122,6 +127,11 @@ Action OptimisticWithPrior::getNextAction(Location current, Observations obs)
 
     auto result = arc_dijkstras::AstarLogging<std::vector<double>>::PerformAstar(
         graph, current, goal, &distanceHeuristic, true);
+
+    if(result.second >= std::numeric_limits<double>::max())
+    {
+        throw std::logic_error("No valid path to goal");
+    }
 
     return result.first[1];
 }

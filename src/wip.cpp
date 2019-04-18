@@ -40,13 +40,13 @@ int main(int argc, char **argv)
     // OmniscientStrategy strat(true_state, 24);
 
     // DenseTrapScenario scenario(rng);
-    // SparseManyBoxesScenario scenario(rng, 0.05);
-    DenseManyBoxesScenario scenario(rng, 0.05);
+    SparseManyBoxesScenario scenario(rng, 0.3, std::vector<double>{0.3, -0.3});
+    // DenseManyBoxesScenario scenario(rng, 0.05, std::vector<double>{0.3, -0.3});
     
     // AverageOverClairvoyance strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
-    OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
-    // OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    // OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // ParetoCost strat(scenario.getGraph(), scenario.goal, scenario.bel, 1.0);
 
 
