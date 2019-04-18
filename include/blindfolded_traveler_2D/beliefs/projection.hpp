@@ -48,8 +48,8 @@ namespace BTP
         bool match_bottom_edge = from[1] < to[1];
 
 
-        double shiftx = cx - (match_left_edge ?   r->x1 + eps : r->x2 - eps);
-        double shifty = cy - (match_bottom_edge ? r->y1 + eps : r->y2 - eps);
+        double shiftx = cx - (match_left_edge ?   r->x1 : r->x2 );
+        double shifty = cy - (match_bottom_edge ? r->y1 : r->y2 );
 
 
         if(from[1] == to[1]) //horizontal edge in graph
