@@ -40,12 +40,13 @@ int main(int argc, char **argv)
     // OmniscientStrategy strat(true_state, 24);
 
     // DenseTrapScenario scenario(rng);
-    SparseManyBoxesScenario scenario(rng, 0.05);
+    // SparseManyBoxesScenario scenario(rng, 0.05);
+    DenseManyBoxesScenario scenario(rng, 0.05);
     
     // AverageOverClairvoyance strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
-    // OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
-    OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    // OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, scenario.bel);
     // ParetoCost strat(scenario.getGraph(), scenario.goal, scenario.bel, 1.0);
 
 
@@ -58,7 +59,7 @@ int main(int argc, char **argv)
 
     ros::Duration(1).sleep(); //Sleep to allow publishers to connect
 
-    player.run(scenario, strat, 1.4);
+    player.run(scenario, strat, 0.2);
 
 
     ros::Duration(1).sleep(); //sleep to allow final messages to reach RViz

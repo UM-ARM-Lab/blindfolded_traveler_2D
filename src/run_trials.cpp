@@ -51,7 +51,7 @@ void test(Scenario &scenario, Strategy &strategy)
     ros::NodeHandle n;
     Player player(n);
     ros::Duration(1).sleep(); //Sleep to allow publishers to connect
-    player.run(scenario, strategy, 0.3);
+    player.run(scenario, strategy, 0.0);
 
     std::string filename = scenario.getName() + "_" + strategy.getName() + "_" +
         arc_helpers::GetCurrentTimeAsString();
@@ -143,8 +143,12 @@ std::vector<ScenarioFactory> getAllScenarios()
     f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.05);});
     f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.1);});
     f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.3);});
+    f.push_back([](std::mt19937& rng) { return std::make_shared<DenseManyBoxesScenario>(rng, 0.05);});
+    f.push_back([](std::mt19937& rng) { return std::make_shared<DenseManyBoxesScenario>(rng, 0.1);});
+    f.push_back([](std::mt19937& rng) { return std::make_shared<DenseManyBoxesScenario>(rng, 0.3);});
     return f;
 }
+
 
 
 void testAll()
@@ -191,6 +195,6 @@ void testForVideo()
 int main(int argc, char **argv)
 {
     ros::init(argc, argv, "run_trials");
-    // testAll();
-    testForVideo();
+    testAll();
+    // testForVideo();
 }
