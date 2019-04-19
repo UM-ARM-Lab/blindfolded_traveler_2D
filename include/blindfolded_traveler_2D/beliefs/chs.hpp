@@ -124,7 +124,7 @@ namespace BTP
         std::shared_ptr<Obstacles2D::Obstacle> sampleFrom(std::mt19937 &rng) const
         {
             int num_occupied = 0;
-            std::cout << "Sampling...\n";
+            // std::cout << "Sampling...\n";
 
             for (int64_t x_index = 0; x_index < GetNumXCells(); x_index++)
             {
@@ -136,11 +136,11 @@ namespace BTP
                     }
                 }
             }
-            std::cout << "num_occupied: " << num_occupied << "\n";
+            // std::cout << "num_occupied: " << num_occupied << "\n";
 
             std::uniform_int_distribution<int> distribution(1, num_occupied);
             int selected = distribution(rng);
-            std::cout << "Sampled voxed " << selected << "\n";
+            // std::cout << "Sampled voxed " << selected << "\n";
 
             num_occupied = 0;
             for (int64_t x_index = 0; x_index < GetNumXCells(); x_index++)
@@ -152,7 +152,7 @@ namespace BTP
                         num_occupied++;
                         if(num_occupied == selected)
                         {
-                            double d = GetCellSizes().x()/2;
+                            double d = GetCellSizes().x()/2 + robot_width/2;
                             const Eigen::Vector4d location = GridIndexToLocation(x_index, y_index, 0.0);
 
                             double x = location(0);
@@ -257,7 +257,11 @@ namespace BTP
         virtual void update(Observation obs)
         {
             addFreeSpace(free_space, obs);
-            if(!obs.succeeded())
+            if(obs.succeeded())
+            {
+                cur = obs.to;
+            }
+            else
             {
                 addChs(obs);
             }
