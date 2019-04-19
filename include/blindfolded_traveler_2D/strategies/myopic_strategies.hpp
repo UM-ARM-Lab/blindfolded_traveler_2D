@@ -19,6 +19,12 @@ namespace BTP
             name = "Omniscient";
         }
 
+        virtual const std::string getBeliefName() const override
+        {
+            return "None";
+        }
+        
+
         virtual Action getNextAction(Location current, Observations obs) override;
     };
 
@@ -31,6 +37,12 @@ namespace BTP
         {
             name = "NaiveOptimistic";
         }
+
+        virtual const std::string getBeliefName() const override
+        {
+            return "None";
+        }
+
         
         void updateBelief(Observation obs)
         {
@@ -52,8 +64,14 @@ namespace BTP
         OptimisticWithPrior(GraphD graph, Location goal, const Belief &bel):
             Strategy(graph, goal), bel(bel.clone()), num_samples(100)
         {
-            name = "Optimistic_" + this->bel->getName();
+            name = "Optimistic";
         }
+
+        virtual const std::string getBeliefName() const override
+        {
+            return bel->getName();
+        }
+
 
         void updateEdges();
 
@@ -76,8 +94,14 @@ namespace BTP
         AverageOverClairvoyance(GraphD graph, Location goal, const Belief &bel) :
             Strategy(graph, goal), bel(bel.clone()), num_samples(100)
         {
-            name = "Averaging_over_clairvoyance_" + this->bel->getName();
+            name = "Averaging_over_clairvoyance";
         }
+
+        virtual const std::string getBeliefName() const override
+        {
+            return bel->getName();
+        }
+
 
         Action planPathInEnv(const State &s);
 

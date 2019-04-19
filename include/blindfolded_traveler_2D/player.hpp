@@ -28,7 +28,8 @@ namespace BTP
 
         void displayTitles(const Scenario &scenario, const Strategy &strat)
         {
-            viz.vizText(Str("Scenario: ") + scenario.getName(), 1, 0.5, 1.1, "scenario");
+            viz.vizText(Str("Scenario: ") + scenario.getName(), 1, 0.5, 1.15, "scenario");
+            viz.vizText(Str("Belief: ") + strat.getBeliefName(), 1, 0.5, 1.1, "belief");
             viz.vizText(Str("Strategy: ") + strat.getName(), 1, 0.5, 1.05, "strategy");
         }
 
@@ -53,8 +54,12 @@ namespace BTP
             displayTitles(scenario, strat);
             std::cout << "Agent starting at " << scenario.getLocation() << " with goal " << strat.goal << "\n";
 
-            PROFILE_RECORD_DOUBLE("Strategy: " + strat.getName(), 0);
             PROFILE_RECORD_DOUBLE("Scenario: " + scenario.getName(), 0);
+            PROFILE_RECORD_DOUBLE("Belief: " + strat.getBeliefName(), 0);
+            PROFILE_RECORD_DOUBLE("Strategy: " + strat.getName(), 0);
+
+
+
 
             int action_count = 0;
             int action_limit = 300;

@@ -16,7 +16,12 @@ namespace BTP
         OptimisticRollout(GraphD graph, Location goal, const Belief &bel) :
             Strategy(graph, goal), bel(bel.clone()), num_rollouts(100)
         {
-            name = "Optimistic_Rollout_" + this->bel->getName();
+            name = "Optimistic_Rollout";
+        }
+
+        virtual const std::string getBeliefName() const override
+        {
+            return bel->getName();
         }
 
 

@@ -56,6 +56,7 @@ void test(Scenario &scenario, Strategy &strategy)
     player.run(scenario, strategy, 0.0);
 
     std::string filename = scenario.getName() + "_" + strategy.getName() + "_" +
+        strategy.getBeliefName() + "_" +
         arc_helpers::GetCurrentTimeAsString();
     PROFILE_WRITE_ALL_FEWER_THAN(filename, 100);
 }
@@ -176,7 +177,7 @@ std::vector<ScenarioFactory> getAllScenarios()
     // f.push_back([](std::mt19937& rng) { return std::make_shared<DenseSingleWallScenario>(rng);});
     // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseTrapScenario>(rng);});
     f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.05);});
-    f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.1);});
+    // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.1);});
     f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.3);});
     // f.push_back([](std::mt19937& rng) { return std::make_shared<DenseManyBoxesScenario>(rng, 0.05);});
     // f.push_back([](std::mt19937& rng) { return std::make_shared<DenseManyBoxesScenario>(rng, 0.1);});

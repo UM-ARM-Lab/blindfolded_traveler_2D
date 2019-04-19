@@ -20,6 +20,12 @@ namespace BTP
             PROFILE_RECORD_DOUBLE("collision_probability_weight", collision_probability_weight);
         }
 
+        virtual const std::string getBeliefName() const override
+        {
+            return bel->getName();
+        }
+
+
         virtual Action getNextAction(Location current, Observations obs) override
         {
             if(obs.size() > 0)
@@ -42,7 +48,7 @@ namespace BTP
 
         virtual std::string getName() const override
         {
-            return name + "_" + bel->getName();
+            return name;
         }
 
 

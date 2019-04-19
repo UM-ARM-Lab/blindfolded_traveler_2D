@@ -4,6 +4,7 @@
 #include "states/state.hpp"
 #include "observations.hpp"
 #include "graph_planner/graph_visualization.hpp"
+#include "beliefs/belief.hpp"
 
 namespace BTP
 {
@@ -40,6 +41,8 @@ namespace BTP
         {
             return name;
         }
+
+        virtual const std::string getBeliefName() const = 0;
     };
 }
 
