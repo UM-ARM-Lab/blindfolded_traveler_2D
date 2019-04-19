@@ -4,6 +4,7 @@
 #include "beliefs/obstacle_distribution.hpp"
 #include <random>
 #include "graph_planner/halton_graph.hpp"
+#include "arc_utilities/pretty_print.hpp"
 
 namespace BTP
 {
@@ -94,7 +95,8 @@ namespace BTP
         SparseManyBoxesScenario(std::mt19937& rng, double noise, const std::vector<double>& bias = {0,0}) :
             ManyBoxesScenario(rng, Grid(5), 0, 24, noise, bias)
         {
-            name = "ManyBoxes_noise=" + std::to_string(noise);
+            name = "ManyBoxes_noise=" + PrettyPrint::PrettyPrint(noise) +
+                "_bias=(" + PrettyPrint::PrettyPrint(bias) + ")";
         }
     };
 

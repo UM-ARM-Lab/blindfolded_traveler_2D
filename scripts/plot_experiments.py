@@ -23,6 +23,8 @@ class Experiment:
     timestamp = None
     scenario = None
     strategy = None
+    belief = None
+    label = None
     exec_cost = None
     pareto_weight = None
     succeeded = True
@@ -42,14 +44,14 @@ def plot_scenario(experiments, save_path):
 
     """Plots a list of experiments all belonging to the same scenario"""
 
-    experiments.sort(key=lambda e:e.strategy)
+    experiments.sort(key=lambda e:e.label)
 
     series = pd.Series([e.exec_cost * e.succeeded for e in experiments])
     ax = series.plot(kind='bar')
     
     ax.set_title(experiments[0].scenario)
     
-    x_labels = [e.strategy for e in experiments]
+    x_labels = [e.label for e in experiments]
     ax.set_xticklabels(x_labels)
     plt.tight_layout()
     plt.show()
@@ -75,10 +77,12 @@ def load_file(filepath, filename):
                 exp.strategy = parts[1]
             elif parts[0] == "Scenario:":
                 exp.scenario = parts[1]
+            elif parts[0] == "Belief:":
+                exp.belief = parts[1]
             elif parts[0] == "Action_Limit_Exceeded":
                 exp.succeeded = False
             line = f.readline()
-    
+    exp.label = exp.strategy + "_" + exp.belief
     # IPython.embed()
     return exp
         
