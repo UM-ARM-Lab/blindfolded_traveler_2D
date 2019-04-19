@@ -7,6 +7,7 @@
 #include "scenarios/trap.hpp"
 #include "scenarios/many_boxes.hpp"
 #include "beliefs/chs.hpp"
+#include "beliefs/indep_edge_belief.hpp"
 #include "player.hpp"
 #include "ros/ros.h"
 #include "arc_utilities/timing.hpp"
@@ -15,6 +16,7 @@ using namespace BTP;
 
 typedef std::function<std::shared_ptr<Scenario>(std::mt19937&)> ScenarioFactory;
 // typedef std::function<std::shared_ptr<Strategy>(void)> StrategyFactory;
+typedef std::function<std::unique_ptr<Belief>(const Belief&)> BeliefGenerator;
 
 
 // std::vector<std::function<std::shared_ptr<Scenario>(void)>> getScenarioFactories()
@@ -84,6 +86,7 @@ void test3(ScenarioFactory fac)
     test(*scenario_ptr, strat);
 }
 
+
 void test4(ScenarioFactory fac)
 {
     rng.seed(seed);
@@ -129,6 +132,38 @@ void test7(ScenarioFactory fac)
     }
 }
 
+void testOptimistic(ScenarioFactory fac, BeliefGenerator bg)
+{
+    rng.seed(seed);
+    auto scenario_ptr = fac(rng);
+    OptimisticWithPrior strat(scenario_ptr->getGraph(), scenario_ptr->goal, *bg(scenario_ptr->getPrior()));
+    test(*scenario_ptr, strat);
+}
+
+void testHOP(ScenarioFactory fac, BeliefGenerator bg)
+{
+    rng.seed(seed);
+    auto scenario_ptr = fac(rng);
+    AverageOverClairvoyance strat(scenario_ptr->getGraph(), scenario_ptr->goal, *bg(scenario_ptr->getPrior()));
+    test(*scenario_ptr, strat);
+}
+
+void testORO(ScenarioFactory fac, BeliefGenerator bg)
+{
+    rng.seed(seed);
+    auto scenario_ptr = fac(rng);
+    OptimisticRollout strat(scenario_ptr->getGraph(), scenario_ptr->goal, *bg(scenario_ptr->getPrior()));
+    test(*scenario_ptr, strat);
+}
+
+void testCollisionMeasure(ScenarioFactory fac, BeliefGenerator bg)
+{
+    rng.seed(seed);
+    auto scenario_ptr = fac(rng);
+    ParetoCost strat(scenario_ptr->getGraph(), scenario_ptr->goal, *bg(scenario_ptr->getPrior()), 1.0);
+    test(*scenario_ptr, strat);
+}
+
 
 std::vector<ScenarioFactory> getAllScenarios()
 {
@@ -143,10 +178,22 @@ std::vector<ScenarioFactory> getAllScenarios()
     f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.05);});
     f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.1);});
     f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.3);});
-    f.push_back([](std::mt19937& rng) { return std::make_shared<DenseManyBoxesScenario>(rng, 0.05);});
-    f.push_back([](std::mt19937& rng) { return std::make_shared<DenseManyBoxesScenario>(rng, 0.1);});
-    f.push_back([](std::mt19937& rng) { return std::make_shared<DenseManyBoxesScenario>(rng, 0.3);});
+    // f.push_back([](std::mt19937& rng) { return std::make_shared<DenseManyBoxesScenario>(rng, 0.05);});
+    // f.push_back([](std::mt19937& rng) { return std::make_shared<DenseManyBoxesScenario>(rng, 0.1);});
+    // f.push_back([](std::mt19937& rng) { return std::make_shared<DenseManyBoxesScenario>(rng, 0.3);});
     return f;
+}
+
+std::vector<BeliefGenerator> getAllBeliefs()
+{
+    std::vector<BeliefGenerator> bg;
+    bg.push_back([](const Belief& b) { return IndepEdgeBelief(dynamic_cast<const ObstacleBelief&>(b)).clone(); });
+    bg.push_back([](const Belief& b) { return b.clone();});
+    bg.push_back([](const Belief& b) {
+            const ObstacleBelief& ob = dynamic_cast<const ObstacleBelief&>(b);
+            return ChsBelief(ob.graph, ob.cur, 0.01, robot_width).clone();
+        });
+    return bg;
 }
 
 
@@ -158,13 +205,20 @@ void testAll()
 
     for(auto scenario_factory: getAllScenarios())
     {
-        test1(scenario_factory); //Omniscient
-        test2(scenario_factory); //Optimistic
-        test3(scenario_factory); //Optimistic With Prior
-        test4(scenario_factory); //Optimistic Rollout
-        test5(scenario_factory); //Average Over Clairvoyance
-        test6(scenario_factory); //Pareto Cost w/prior
-        test7(scenario_factory); //Pareto Cost CHS
+        for(auto beliefs: getAllBeliefs())
+        {
+            testOptimistic(scenario_factory, beliefs);
+            testHOP(scenario_factory, beliefs);
+            testORO(scenario_factory, beliefs);
+            testCollisionMeasure(scenario_factory, beliefs);
+        }
+        // test1(scenario_factory); //Omniscient
+        // test2(scenario_factory); //Optimistic
+        // test3(scenario_factory); //Optimistic With Prior
+        // test4(scenario_factory); //Optimistic Rollout
+        // test5(scenario_factory); //Average Over Clairvoyance
+        // test6(scenario_factory); //Pareto Cost w/prior
+        // test7(scenario_factory); //Pareto Cost CHS
     }
 
 }
