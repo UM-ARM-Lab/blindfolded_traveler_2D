@@ -44,17 +44,18 @@ int main(int argc, char **argv)
     SparseManyBoxesScenario scenario(rng, 0.1, std::vector<double>{0.0, -0.0});
     // DenseManyBoxesScenario scenario(rng, 0.05, std::vector<double>{0.3, -0.3});
     // ObstacleBelief bel = scenario.bel;
-    IndepEdgeBelief bel(scenario.bel);
+    // IndepEdgeBelief bel(scenario.bel);
+    ChsBelief bel = ChsBelief(scenario.getGraph(), scenario.getLocation(), 0.01, robot_width);
     
-    // AverageOverClairvoyance strat(scenario.getGraph(), scenario.goal, scenario.bel);
+    AverageOverClairvoyance strat(scenario.getGraph(), scenario.goal, bel);
     // OptimisticStrategy strat(scenario.getGraph(), scenario.goal);
-    // OptimisticRollout strat(scenario.getGraph(), scenario.goal, scenario.bel);
-    OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, bel);
-    // ParetoCost strat(scenario.getGraph(), scenario.goal, scenario.bel, 1.0);
+    // OptimisticRollout strat(scenario.getGraph(), scenario.goal, bel);
+    // OptimisticWithPrior strat(scenario.getGraph(), scenario.goal, bel);
+    // ParetoCost strat(scenario.getGraph(), scenario.goal, bel, 1.0);
 
 
     
-    // ChsBelief chsb = ChsBelief(scenario.getGraph(), scenario.getLocation(), 0.01, robot_width);
+
     // ParetoCost strat(scenario.getGraph(), scenario.goal, chsb, 1.0);
     
 

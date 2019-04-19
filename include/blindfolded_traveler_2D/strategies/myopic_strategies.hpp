@@ -52,7 +52,7 @@ namespace BTP
         OptimisticWithPrior(GraphD graph, Location goal, const Belief &bel):
             Strategy(graph, goal), bel(bel.clone()), num_samples(100)
         {
-            name = "Optimistic";
+            name = "Optimistic_" + this->bel->getName();
         }
 
         void updateEdges();
@@ -76,7 +76,7 @@ namespace BTP
         AverageOverClairvoyance(GraphD graph, Location goal, const Belief &bel) :
             Strategy(graph, goal), bel(bel.clone()), num_samples(100)
         {
-            name = "Averaging_over_clairvoyance";
+            name = "Averaging_over_clairvoyance_" + this->bel->getName();
         }
 
         Action planPathInEnv(const State &s);

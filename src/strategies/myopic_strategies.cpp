@@ -117,6 +117,12 @@ Action OptimisticWithPrior::getNextAction(Location current, Observations obs)
     if(obs.size() > 0)
     {
         bel->update(obs.back());
+        {
+            using namespace arc_dijkstras;
+            GraphEdge& e = graph.getEdge(obs.back().from, obs.back().to);
+            e.setValidity(obs.back().succeeded() ? EDGE_VALIDITY::VALID : EDGE_VALIDITY::INVALID); 
+        }
+
     }
     updateEdges();
 
