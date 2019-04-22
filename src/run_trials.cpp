@@ -53,7 +53,7 @@ void test(Scenario &scenario, Strategy &strategy)
     ros::NodeHandle n;
     Player player(n);
     ros::Duration(1).sleep(); //Sleep to allow publishers to connect
-    player.run(scenario, strategy, 0.0);
+    player.run(scenario, strategy, 0.18);
 
     std::string filename = scenario.getName() + "_" + strategy.getName() + "_" +
         strategy.getBeliefName() + "_" +
@@ -176,21 +176,20 @@ std::vector<ScenarioFactory> getAllScenarios()
     
     // f.push_back([](std::mt19937& rng) { return std::make_shared<DenseSingleWallScenario>(rng);});
     // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseTrapScenario>(rng);});
+
     f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.05);});
     // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.1);});
-    f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.3);});
+    // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.3);});
+    // f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.05, std::vector<double>{0.3, -0.3});});
     f.push_back([](std::mt19937& rng) { return std::make_shared<SparseManyBoxesScenario>(rng, 0.3, std::vector<double>{0.3, -0.3});});
-    // f.push_back([](std::mt19937& rng) { return std::make_shared<DenseManyBoxesScenario>(rng, 0.05);});
-    // f.push_back([](std::mt19937& rng) { return std::make_shared<DenseManyBoxesScenario>(rng, 0.1);});
-    // f.push_back([](std::mt19937& rng) { return std::make_shared<DenseManyBoxesScenario>(rng, 0.3);});
     return f;
 }
 
 std::vector<BeliefGenerator> getAllBeliefs()
 {
     std::vector<BeliefGenerator> bg;
-    bg.push_back([](const Belief& b) { return IndepEdgeBelief(dynamic_cast<const ObstacleBelief&>(b)).clone(); });
     bg.push_back([](const Belief& b) { return b.clone();});
+    bg.push_back([](const Belief& b) { return IndepEdgeBelief(dynamic_cast<const ObstacleBelief&>(b)).clone(); });
     bg.push_back([](const Belief& b) {
             const ObstacleBelief& ob = dynamic_cast<const ObstacleBelief&>(b);
             return ChsBelief(ob.graph, ob.cur, 0.01, robot_width).clone();

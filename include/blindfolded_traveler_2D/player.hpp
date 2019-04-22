@@ -62,7 +62,7 @@ namespace BTP
 
 
             int action_count = 0;
-            int action_limit = 300;
+            int action_limit = 30;
 
             try
             {
