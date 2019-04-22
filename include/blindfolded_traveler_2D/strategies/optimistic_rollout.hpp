@@ -48,11 +48,18 @@ namespace BTP
             {
 
                 std::unique_ptr<State> sampled_state = bel->sample(rng);
+                int num_resamples=0;
                 while(!sampled_state->pathExists(goal))
                 {
                     std::cout << "Resampling state that has a path to the goal\n";
                     sampled_state = bel->sample(rng);
+                    num_resamples++;
+                    if(num_resamples > 1000)
+                    {
+                        throw std::logic_error("Could not sample a path to the goal in 1000 trials");
+                    }
                 }
+                
                 
                 auto possible_actions = sampled_state->getActions(sampled_state->current_location);
 

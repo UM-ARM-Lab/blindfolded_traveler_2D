@@ -64,22 +64,30 @@ namespace BTP
             int action_count = 0;
             int action_limit = 300;
 
-            while(!scenario.completed() && action_count < action_limit)
+            try
             {
-                PROFILE_START("Planning Action");
-                Action a = strat.getNextAction(scenario.getLocation(), scenario.getObservations(), viz);
-                PROFILE_RECORD("Planning Action");
-                std::cout << "Agent at " << scenario.getLocation() << " taking action " << a << "\n";
+                while(!scenario.completed() && action_count < action_limit)
+                {
+                    PROFILE_START("Planning Action");
+                    Action a = strat.getNextAction(scenario.getLocation(), scenario.getObservations(), viz);
+                    PROFILE_RECORD("Planning Action");
+                    std::cout << "Agent at " << scenario.getLocation() << " taking action " << a << "\n";
                 
-                scenario.transition(a);
-                strat.viz(viz);                
+                    scenario.transition(a);
+                    strat.viz(viz);                
                 
-                ros::Duration(sleep_time_s).sleep();
-                action_count++;
+                    ros::Duration(sleep_time_s).sleep();
+                    action_count++;
+                }
+                //run one final time to update belief for visualization
+                strat.getNextAction(scenario.getLocation(), scenario.getObservations(), viz);
+            }
+            catch(const std::exception &e)
+            {
+                std::cout << "Error " << e.what() << "\n";
+                PROFILE_RECORD_DOUBLE("ERROR: ", 0.0);
             }
 
-            //run one final time to update belief for visualization
-            strat.getNextAction(scenario.getLocation(), scenario.getObservations(), viz);
 
             reportStats(scenario);
             recordStats(scenario);
