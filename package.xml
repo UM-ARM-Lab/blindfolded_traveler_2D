@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>blindfolded_traveler_2D</name>
+  <name>blindfolded_traveler_2d</name>
   <version>0.0.0</version>
-  <description>The blindfolded_traveler_2D package</description>
+  <description>The blindfolded_traveler_2d package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
