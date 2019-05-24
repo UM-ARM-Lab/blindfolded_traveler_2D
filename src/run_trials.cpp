@@ -209,9 +209,13 @@ void testAll()
         for(auto beliefs: getAllBeliefs())
         {
             testOptimistic(scenario_factory, beliefs);
+            arc_helpers::WaitForInput();
             testHOP(scenario_factory, beliefs);
+            arc_helpers::WaitForInput();
             testORO(scenario_factory, beliefs);
+            arc_helpers::WaitForInput();
             testCollisionMeasure(scenario_factory, beliefs);
+            arc_helpers::WaitForInput();
         }
         // test1(scenario_factory); //Omniscient
         // test2(scenario_factory); //Optimistic

@@ -29,7 +29,7 @@ namespace BTP
             Action a = getNextAction(current, obs);
             viz.vizGraph(graph, "Strategy Belief");
             viz.vizPoints(std::vector<Location>{current, goal}, graph);
-            viz.vizPath(std::vector<Location>{current, a}, graph);
+            viz.vizPath(std::vector<Location>{current, a}, graph, current+1000*a, "blue");
             return a;
         }
 
